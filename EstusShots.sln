@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstusShots.Server", "EstusShots.Server\EstusShots.Server.csproj", "{E5D0D7FB-5F7C-43E8-88F5-15DD60104AE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstusShots.Shared", "EstusShots.Shared\EstusShots.Shared.csproj", "{1E26150D-ADFE-41ED-9896-941B486E8777}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstusShots.Gtk", "EstusShots.Gtk\EstusShots.Gtk.csproj", "{165F3B5C-9802-46C5-BCE2-F40C42819045}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5D0D7FB-5F7C-43E8-88F5-15DD60104AE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5D0D7FB-5F7C-43E8-88F5-15DD60104AE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5D0D7FB-5F7C-43E8-88F5-15DD60104AE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5D0D7FB-5F7C-43E8-88F5-15DD60104AE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E26150D-ADFE-41ED-9896-941B486E8777}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E26150D-ADFE-41ED-9896-941B486E8777}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E26150D-ADFE-41ED-9896-941B486E8777}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E26150D-ADFE-41ED-9896-941B486E8777}.Release|Any CPU.Build.0 = Release|Any CPU
+		{165F3B5C-9802-46C5-BCE2-F40C42819045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{165F3B5C-9802-46C5-BCE2-F40C42819045}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{165F3B5C-9802-46C5-BCE2-F40C42819045}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{165F3B5C-9802-46C5-BCE2-F40C42819045}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
