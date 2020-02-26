@@ -1,6 +1,7 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace EstusShots.Shared.Models
+namespace EstusShots.Server.Models
 {
     public class Season
     {
@@ -8,14 +9,12 @@ namespace EstusShots.Shared.Models
 
         public int Number { get; set; }
 
-        public string Game { get; set; } = default!;
+        [MaxLength(50)] public string Game { get; set; } = default!;
 
         public string? Description { get; set; }
 
         public DateTime Start { get; set; }
 
         public DateTime? End { get; set; }
-
-        public string DisplayName => $"S{Number:D2} {Game}";
     }
 }

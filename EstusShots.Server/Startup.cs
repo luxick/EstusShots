@@ -1,3 +1,4 @@
+using AutoMapper;
 using EstusShots.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,6 +23,7 @@ namespace EstusShots.Server
         {
             services.AddDbContext<EstusShotsContext>(
                 opt => opt.UseInMemoryDatabase("debug.db"));
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
         }
 

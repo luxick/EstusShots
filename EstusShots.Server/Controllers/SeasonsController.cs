@@ -1,8 +1,10 @@
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using EstusShots.Server.Services;
-using EstusShots.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Dto = EstusShots.Shared.Models;
 
 namespace EstusShots.Server.Controllers
 {
@@ -11,26 +13,21 @@ namespace EstusShots.Server.Controllers
     public class SeasonsController : ControllerBase
     {
         private readonly EstusShotsContext _context;
+        private readonly IMapper _mapper;
 
-        public SeasonsController(EstusShotsContext context)
+        
+        public SeasonsController(EstusShotsContext context, IMapper mapper)
         {
             _context = context;
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Season>> GetSeason(Guid id)
-        {
-            var season = await _context.Seasons.FindAsync(id);
-            if (season == null) return NotFound();
-            return season;
+            _mapper = mapper;
         }
         
-        [HttpPost]
-        public async Task<ActionResult<Season>> CreateSeason(Season season)
+        [HttpGet]
+        public async Task<ActionResult<List<Dto.Season>>> GetSeasons()
         {
-            _context.Seasons.Add(season);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetSeason), new {id = season.SeasonId}, season);
+            var seasons = await _context.Seasons.ToListAsync();
+            var dtos = _mapper.Map<List<Dto.Season>>(seasons);
+            return dtos;
         }
     }
 }

@@ -1,4 +1,4 @@
-using EstusShots.Shared.Models;
+using EstusShots.Server.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EstusShots.Server.Services
