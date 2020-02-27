@@ -10,6 +10,7 @@ using EstusShots.Shared.Models;
 using Gtk;
 using Application = Gtk.Application;
 using DateTime = System.DateTime;
+using Task = System.Threading.Tasks.Task;
 using UI = Gtk.Builder.ObjectAttribute;
 
 namespace EstusShots.Gtk
@@ -19,14 +20,15 @@ namespace EstusShots.Gtk
         private const string ApiUrl = "http://localhost:5000/api/";
         
         private EstusShotsClient Client { get; }
+        private BindableListView<Season> SeasonsView { get; }
             
         [UI] private readonly TreeView _seasonsView = null;
         [UI] private readonly Button _loadButton = null;
         [UI] private readonly Button _newSeasonButton = null;
         [UI] private readonly Label _infoLabel = null;
+        [UI] private readonly Overlay _seasonsOverlay = null;
+        [UI] private readonly Box _loadingSpinner = null;
 
-        private BindableListView<Season> SeasonsView { get; set; }
-        
         public MainWindow() : this(new Builder("MainWindow.glade")) { }
 
         private MainWindow(Builder builder) : base(builder.GetObject("MainWindow").Handle)
@@ -44,7 +46,6 @@ namespace EstusShots.Gtk
             };
             SeasonsView = new BindableListView<Season>(seasonsColumns, nameof(Season.SeasonId) ,_seasonsView);
             SeasonsView.OnSelectionChanged += SeasonsViewOnOnSelectionChanged;
-            
             Info("Application Started");
         }
 
@@ -54,14 +55,9 @@ namespace EstusShots.Gtk
             Info($"Season '{season.DisplayName}' selected");
         }
 
-        private void NewSeasonButtonOnClicked(object sender, EventArgs e)
+        private async void NewSeasonButtonOnClicked(object sender, EventArgs e)
         {
-            if (!SeasonsView.Items.Any())
-            {
-                Info("Cannot add Season (Not Loaded)");
-                return;
-            }
-            var nextNum = SeasonsView.Items.Max(x => x.Number) + 1 ;
+            var nextNum = SeasonsView.Items.Any() ? SeasonsView.Items.Max(x => x.Number) + 1 : 1 ;
             var season = new Season
             {
                 Game = "Test Game",
@@ -72,7 +68,7 @@ namespace EstusShots.Gtk
             var client = new HttpClient();
             try
             {
-                var response = client.PostAsync(ApiUrl + "season", content).Result;
+                var response = await client.PostAsync(ApiUrl + "season", content);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -80,8 +76,8 @@ namespace EstusShots.Gtk
                     return;
                 }
 
-                ReloadSeasons();
-                Info($"Created new Season");
+                await ReloadSeasons();
+                Info("Created new Season");
             }
             catch (Exception ex)
             {
@@ -90,22 +86,36 @@ namespace EstusShots.Gtk
             }
         }
         
-        private void LoadButtonClicked(object sender, EventArgs a)
+        private async void LoadButtonClicked(object sender, EventArgs a)
         {
-            ReloadSeasons();
+            Info("Loading Seasons...");
+            await ReloadSeasons();
             Info("List Refreshed");
         }
 
-        private void ReloadSeasons()
+        private async Task ReloadSeasons()
         {
-            var seasons = Client.GetSeasons().Result;
+            LoadingMode(true);
+            var seasons = await Task.Factory.StartNew(() => Client.GetSeasons().Result);
             SeasonsView.Items = seasons;
             SeasonsView.DataBind();
+            LoadingMode(false);
         }
         
         private void Window_DeleteEvent(object sender, DeleteEventArgs a)
         {
             Application.Quit();
+        }
+
+        private void LoadingMode(bool active)
+        {
+            _loadButton.Sensitive = !active;
+            _newSeasonButton.Sensitive = !active;
+            _seasonsView.Sensitive = !active;
+            if (active)
+                _seasonsOverlay.AddOverlay(_loadingSpinner);
+            else
+                _seasonsOverlay.Remove(_loadingSpinner);
         }
 
         private void Info(string message)
