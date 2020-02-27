@@ -21,8 +21,4 @@
       <ProjectReference Include="..\EstusShots.Shared\EstusShots.Shared.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="DataStores" />
-    </ItemGroup>
-
 </Project>

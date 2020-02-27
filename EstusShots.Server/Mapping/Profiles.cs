@@ -7,8 +7,11 @@ namespace EstusShots.Server.Mapping
     {
         public Profiles()
         {
-            CreateMap<Season, Shared.Models.Season>();
-            CreateMap<Shared.Models.Season, Season>();
+            CreateMap<Season, Shared.Dto.Season>();
+            CreateMap<Shared.Dto.Season, Season>();
+
+            CreateMap<Episode, Shared.Dto.Episode>();
+            CreateMap<Shared.Dto.Episode, Episode>();
         }
     }
 }

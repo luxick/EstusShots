@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EstusShots.Server.Models
@@ -16,5 +17,7 @@ namespace EstusShots.Server.Models
         public DateTime Start { get; set; }
 
         public DateTime? End { get; set; }
+
+        public List<Episode> Episodes { get; set; } = default!;
     }
 }

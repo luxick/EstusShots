@@ -7,8 +7,10 @@ namespace EstusShots.Server.Services
     {
         public EstusShotsContext(DbContextOptions options) : base(options)
         {
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public DbSet<Season> Seasons { get; set; } = default!;
+        public DbSet<Episode> Episodes { get; set; } = default!;
     }
 }

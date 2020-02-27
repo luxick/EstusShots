@@ -4,7 +4,7 @@ using AutoMapper;
 using EstusShots.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Dto = EstusShots.Shared.Models;
+using Dto = EstusShots.Shared.Dto;
 
 namespace EstusShots.Server.Controllers
 {

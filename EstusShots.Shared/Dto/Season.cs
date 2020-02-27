@@ -1,6 +1,6 @@
 using System;
 
-namespace EstusShots.Shared.Models
+namespace EstusShots.Shared.Dto
 {
     public class Season
     {
