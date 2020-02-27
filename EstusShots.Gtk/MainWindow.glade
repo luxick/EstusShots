@@ -29,7 +29,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="enable_grid_lines">horizontal</property>
-                <signal name="show" handler="SeasonsViewOnShown" swapped="no"/>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection"/>
                 </child>
