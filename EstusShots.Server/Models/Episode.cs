@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EstusShots.Server.Models
@@ -20,5 +22,7 @@ namespace EstusShots.Server.Models
         public Guid SeasonId { get; set; }
 
         public Season Season { get; set; } = default!;
+
+        public ICollection<EpisodePlayers> EpisodePlayers { get; set; } = default!;
     }
 }
