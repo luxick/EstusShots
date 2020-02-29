@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using Microsoft.OpenApi.Models;
 
 namespace EstusShots.Server
 {
@@ -34,6 +34,10 @@ namespace EstusShots.Server
                     options.JsonSerializerOptions.WriteIndented = true;
                 }
             });
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Estus Shots API", Version = "v1" });
+            });
             services.AddScoped<SeasonsService>();
         }
 
@@ -49,10 +53,18 @@ namespace EstusShots.Server
             {
                 app.UseHttpsRedirection();
             }
-            
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Estus Shots API V1");
+            });
+
             app.UseRouting();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
