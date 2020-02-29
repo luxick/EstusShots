@@ -8,4 +8,8 @@
       <ProjectReference Include="..\EstusShots.Shared\EstusShots.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
+    </ItemGroup>
+
 </Project>

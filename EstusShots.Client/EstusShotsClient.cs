@@ -55,6 +55,8 @@ namespace EstusShots.Client
                 var response = await HttpClient.PostAsync(url, content);
                 response.EnsureSuccessStatusCode();
                 var json = await response.Content.ReadAsStringAsync();
+                if (json.IsNullOrWhiteSpace() || json == "{}")
+                    return new ApiResponse<TResult>(new OperationResult(false, "Invalid response", "The server returned no or empty data"));
                 var result = JsonSerializer.Deserialize<ApiResponse<TResult>>(json, _serializerOptions);
                 return result;
             }
