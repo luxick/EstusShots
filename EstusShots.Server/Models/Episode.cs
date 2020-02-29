@@ -11,7 +11,7 @@ namespace EstusShots.Server.Models
 
         [MaxLength(50)] public string Title { get; set; } = default!;
 
-        public DateTime DateTime { get; set; }
+        public DateTime Date { get; set; }
 
         public DateTime Start { get; set; }
 

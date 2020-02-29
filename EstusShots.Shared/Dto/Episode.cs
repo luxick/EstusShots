@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace EstusShots.Shared.Dto
 {
@@ -10,7 +11,7 @@ namespace EstusShots.Shared.Dto
 
         public string Title { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public DateTime Date { get; set; }
 
         public DateTime Start { get; set; }
         
@@ -20,6 +21,6 @@ namespace EstusShots.Shared.Dto
 
         public Season Season { get; set; }
 
-        public string Displayname => $"S{Season.Number:D2}E{Number:D2}";
+        public string DisplayName => $"S{Season?.Number ?? 0:D2}E{Number:D2}";
     }
 }

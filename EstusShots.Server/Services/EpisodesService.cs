@@ -30,6 +30,7 @@ namespace EstusShots.Server.Services
         {
             var episodes = await _context.Episodes
                 .Where(x => x.SeasonId == parameter.SeasonId)
+                .Include(x => x.Season)
                 .ToListAsync();
             var dtos = _mapper.Map<List<Dto.Episode>>(episodes);
             _logger.LogInformation($"{dtos.Count} episodes loaded for season '{parameter.SeasonId}'");
@@ -38,7 +39,9 @@ namespace EstusShots.Server.Services
 
         public async Task<ApiResponse<GetEpisodeResponse>> GetEpisode(GetEpisodeParameter parameter)
         {
-            var episode = await _context.Seasons.FindAsync(parameter.EpisodeId);
+            var episode = await _context.Episodes
+                .Include(x => x.Season)
+                .FirstOrDefaultAsync(x => x.EpisodeId == parameter.EpisodeId);
             if (episode == null)
             {
                 _logger.LogWarning($"Episode with ID {parameter.EpisodeId} was not found in database");
