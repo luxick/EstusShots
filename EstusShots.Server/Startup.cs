@@ -6,18 +6,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace EstusShots.Server
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        private bool IsDevelopment { get; set; }
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -25,18 +27,25 @@ namespace EstusShots.Server
             services.AddDbContext<EstusShotsContext>(
                 opt => opt.UseInMemoryDatabase("debug.db"));
             services.AddAutoMapper(typeof(Startup));
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                if (IsDevelopment)
+                {
+                    options.JsonSerializerOptions.WriteIndented = true;
+                }
+            });
+            services.AddScoped<SeasonsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            IsDevelopment = env.IsDevelopment();
+            if (IsDevelopment)
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            if (!env.IsDevelopment())
+            else
             {
                 app.UseHttpsRedirection();
             }

@@ -8,9 +8,9 @@ namespace EstusShots.Shared.Dto
 
         public int Number { get; set; }
 
-        public string Game { get; set; } = default!;
+        public string Game { get; set; }
 
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         public DateTime Start { get; set; }
 

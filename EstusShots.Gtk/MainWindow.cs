@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EstusShots.Client;
 using EstusShots.Gtk.Controls;
 using EstusShots.Shared.Dto;
+using EstusShots.Shared.Models.Parameters;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
@@ -63,6 +64,7 @@ namespace EstusShots.Gtk
         private async void NewSeasonButtonOnClicked(object sender, EventArgs e)
         {
             using var _ = new LoadingMode(this);
+            // TODO real season edit control
             var season = new Season
             {
                 Game = "Test Game",
@@ -70,14 +72,13 @@ namespace EstusShots.Gtk
                 Start = DateTime.Now,
                 Description = "This is a demo description!"
             };
-
-            var (res, _) = await Client.CreateSeason(season);
-            if (!res.Success)
+            var parameter = new SaveSeasonParameter(season);
+            var res = await Client.Seasons.SaveSeason(parameter);
+            if (!res.OperationResult.Success)
             {
-                _infoLabel.Text = $"Error while creating Season: {res.ShortMessage}";
+                _infoLabel.Text = $"Error while creating Season: {res.OperationResult.ShortMessage}";
                 return;
             }
-
             await ReloadSeasons();
             Info("Created new Season");
         }
@@ -91,14 +92,15 @@ namespace EstusShots.Gtk
 
         private async Task ReloadSeasons()
         {
-            var (res, seasons) = await Task.Factory.StartNew(() => Client.GetSeasons().Result);
-            if (!res.Success)
+            var res = await Task.Factory.StartNew(
+                () => Client.Seasons.GetSeasons(new GetSeasonsParameter()).Result);
+            if (!res.OperationResult.Success)
             {
-                _infoLabel.Text = $"Refresh Failed: {res.ShortMessage}";
+                _infoLabel.Text = $"Refresh Failed: {res.OperationResult.ShortMessage}";
                 return;
             }
 
-            SeasonsControl.Items = seasons;
+            SeasonsControl.Items = res.Data.Seasons;
             SeasonsControl.DataBind();
             Info("List Refreshed");
         }

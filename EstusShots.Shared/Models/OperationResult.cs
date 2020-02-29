@@ -29,4 +29,35 @@ namespace EstusShots.Shared.Models
             StackTrace = e.StackTrace;
         }
     }
+
+    public class ApiResponse<T> where T : class, new()
+    {
+        public OperationResult OperationResult { get; set; }
+
+        public T Data { get; set; }
+
+        public ApiResponse()
+        {
+            OperationResult = new OperationResult();
+            Data = new T();
+        }
+
+        public ApiResponse(OperationResult operationResult)
+        {
+            OperationResult = operationResult;
+            Data = new T();
+        }
+        
+        public ApiResponse(T data)
+        {
+            OperationResult = new OperationResult();
+            Data = data;
+        }
+        
+        public ApiResponse(OperationResult operationResult, T data)
+        {
+            OperationResult = operationResult;
+            Data = data;
+        }
+    }
 }
