@@ -33,5 +33,17 @@ namespace EstusShots.Server.Services
             _logger.LogInformation($"{dtos.Count} episodes loaded for season '{parameter.SeasonId}'");
             return new ApiResponse<GetEpisodesResponse>(new GetEpisodesResponse(dtos));
         }
+
+        public async Task<ApiResponse<GetEpisodeResponse>> GetEpisode(GetEpisodeParameter parameter)
+        {
+            var episode = await _context.Seasons.FindAsync(parameter.EpisodeId);
+            if (episode == null)
+            {
+                _logger.LogWarning($"Episode with ID {parameter.EpisodeId} was not found in database");
+                return new ApiResponse<GetEpisodeResponse>(new OperationResult(false, "Episode not found"));
+            }
+            var dto = _mapper.Map<Dto.Episode>(episode);
+            return new ApiResponse<GetEpisodeResponse>(new GetEpisodeResponse(dto));
+        }
     }
 }

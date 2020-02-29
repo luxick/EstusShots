@@ -35,5 +35,19 @@ namespace EstusShots.Server.Controllers
                 return new ApiResponse<GetEpisodesResponse>(new OperationResult(e));
             }
         }
+
+        public async Task<ApiResponse<GetEpisodeResponse>> GetEpisode(GetEpisodeParameter parameter)
+        {
+            try
+            {
+                _logger.LogInformation($"Request received from client '{Request.HttpContext.Connection.RemoteIpAddress}'");
+                return await _episodesService.GetEpisode(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Exception Occured");
+                return new ApiResponse<GetEpisodeResponse>(new OperationResult(e));
+            }
+        }
     }
 }

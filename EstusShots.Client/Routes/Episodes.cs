@@ -18,7 +18,10 @@ namespace EstusShots.Client.Routes
         private string ActionUrl([CallerMemberName]string caller = "") =>
             $"{_client.ApiUrl}{nameof(Episodes)}/{caller}";
 
-        public async Task<ApiResponse<GetEpisodesResponse>> GetEpisodes(GetEpisodesParameter parameter)
-            => await _client.PostToApi<GetEpisodesResponse, GetEpisodesParameter>(ActionUrl(), parameter);
+        public async Task<ApiResponse<GetEpisodesResponse>> GetEpisodes(GetEpisodesParameter parameter) =>
+            await _client.PostToApi<GetEpisodesResponse, GetEpisodesParameter>(ActionUrl(), parameter);
+
+        public async Task<ApiResponse<GetEpisodeResponse>> GetEpisode(GetEpisodeParameter parameter) =>
+            await _client.PostToApi<GetEpisodeResponse, GetEpisodeParameter>(ActionUrl(), parameter);
     }
 }

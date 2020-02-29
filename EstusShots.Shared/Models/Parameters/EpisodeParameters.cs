@@ -48,4 +48,48 @@ namespace EstusShots.Shared.Models.Parameters
             Episodes = new List<Episode>();
         }
     }
+    
+    // GetEpisode
+
+    /// <summary>
+    /// Parameter class for loading a single episode
+    /// </summary>
+    public class GetEpisodeParameter : IApiParameter
+    {
+        /// <summary>
+        /// ID of the episode
+        /// </summary>
+        public Guid EpisodeId { get; set; }
+        
+        public GetEpisodeParameter(Guid episodeId)
+        {
+            EpisodeId = episodeId;
+        }
+
+        public GetEpisodeParameter()
+        {
+            EpisodeId = Guid.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Parameter class returned from the API with a single loaded episode
+    /// </summary>
+    public class GetEpisodeResponse : IApiResponse
+    {
+        /// <summary>
+        /// The loaded episode
+        /// </summary>
+        public Episode Episode { get; set; }
+        
+        public GetEpisodeResponse(Episode episode)
+        {
+            Episode = episode;
+        }
+
+        public GetEpisodeResponse()
+        {
+            
+        }
+    }
 }

@@ -22,16 +22,6 @@ namespace EstusShots.Server.Controllers
             _mapper = mapper;
             _logger = logger;
         }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Shared.Dto.Episode>> GetEpisode(Guid id)
-        {
-            var episode = await _context.Seasons.FindAsync(id);
-            if (episode == null) {return NotFound();}
-
-            var episodeDto = _mapper.Map<Shared.Dto.Episode>(episode);
-            return episodeDto;
-        }
         
         [HttpPost]
         public async Task<ActionResult<Shared.Dto.Episode>> CreateSeason(Shared.Dto.Episode episodeDto)
@@ -46,7 +36,7 @@ namespace EstusShots.Server.Controllers
             {
                 _logger.LogError(e, "Error while saving object");
             }
-            return CreatedAtAction(nameof(GetEpisode), new {id = episode.EpisodeId}, episode);
+            return CreatedAtAction("", new {id = episode.EpisodeId}, episode);
         }
     }
 }
