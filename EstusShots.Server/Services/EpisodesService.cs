@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EstusShots.Server.Models;
 using EstusShots.Shared.Interfaces;
 using EstusShots.Shared.Models;
 using EstusShots.Shared.Models.Parameters;
@@ -44,6 +46,30 @@ namespace EstusShots.Server.Services
             }
             var dto = _mapper.Map<Dto.Episode>(episode);
             return new ApiResponse<GetEpisodeResponse>(new GetEpisodeResponse(dto));
+        }
+
+        public async Task<ApiResponse<SaveEpisodeResponse>> SaveEpisode(SaveEpisodeParameter parameter)
+        {
+            var episode = _mapper.Map<Episode>(parameter.Episode);
+            if (episode.EpisodeId == Guid.Empty)
+            {
+                _context.Episodes.Add(episode);
+                try
+                {
+                    var count = await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Updated {count} rows");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Error while saving object");
+                    return new ApiResponse<SaveEpisodeResponse>(new OperationResult(e));
+                }
+                return new ApiResponse<SaveEpisodeResponse>(new SaveEpisodeResponse(episode.EpisodeId));
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

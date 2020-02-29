@@ -23,5 +23,8 @@ namespace EstusShots.Client.Routes
 
         public async Task<ApiResponse<GetEpisodeResponse>> GetEpisode(GetEpisodeParameter parameter) =>
             await _client.PostToApi<GetEpisodeResponse, GetEpisodeParameter>(ActionUrl(), parameter);
+
+        public async Task<ApiResponse<SaveEpisodeResponse>> SaveEpisode(SaveEpisodeParameter parameter) =>
+            await _client.PostToApi<SaveEpisodeResponse, SaveEpisodeParameter>(ActionUrl(), parameter);
     }
 }

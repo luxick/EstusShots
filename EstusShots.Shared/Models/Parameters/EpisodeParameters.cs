@@ -92,4 +92,48 @@ namespace EstusShots.Shared.Models.Parameters
             
         }
     }
+    
+    // SaveEpisode
+
+    /// <summary>
+    /// Parameter class for creating or updating episode objects
+    /// </summary>
+    public class SaveEpisodeParameter : IApiParameter
+    {
+        /// <summary>
+        /// The new or updated episode
+        /// </summary>
+        public Episode Episode { get; set; }
+
+        public SaveEpisodeParameter(Episode episode)
+        {
+            Episode = episode;
+        }
+
+        public SaveEpisodeParameter()
+        {
+            Episode = new Episode();
+        }
+    }
+
+    /// <summary>
+    /// Parameter class returned from the API after creating or updating an episode
+    /// </summary>
+    public class SaveEpisodeResponse : IApiResponse
+    {
+        /// <summary>
+        /// ID of the created or updated episode
+        /// </summary>
+        public Guid EpisodeId { get; set; }
+
+        public SaveEpisodeResponse(Guid episodeId)
+        {
+            EpisodeId = episodeId;
+        }
+
+        public SaveEpisodeResponse()
+        {
+            
+        }
+    }
 }

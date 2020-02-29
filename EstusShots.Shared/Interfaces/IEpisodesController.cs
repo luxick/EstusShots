@@ -22,5 +22,12 @@ namespace EstusShots.Shared.Interfaces
         /// <param name="parameter">Parameter object for loading a single episode</param>
         /// <returns>The GetEpisode response object</returns>
         Task<ApiResponse<GetEpisodeResponse>> GetEpisode(GetEpisodeParameter parameter);
+
+        /// <summary>
+        /// Creates or updates an episode object
+        /// </summary>
+        /// <param name="parameter">The parameter object</param>
+        /// <returns>The response object</returns>
+        Task<ApiResponse<SaveEpisodeResponse>> SaveEpisode(SaveEpisodeParameter parameter);
     }
 }

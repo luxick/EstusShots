@@ -49,5 +49,19 @@ namespace EstusShots.Server.Controllers
                 return new ApiResponse<GetEpisodeResponse>(new OperationResult(e));
             }
         }
+
+        public async Task<ApiResponse<SaveEpisodeResponse>> SaveEpisode(SaveEpisodeParameter parameter)
+        {
+            try
+            {
+                _logger.LogInformation($"Request received from client '{Request.HttpContext.Connection.RemoteIpAddress}'");
+                return await _episodesService.SaveEpisode(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Exception Occured");
+                return new ApiResponse<SaveEpisodeResponse>(new OperationResult(e));
+            }
+        }
     }
 }
