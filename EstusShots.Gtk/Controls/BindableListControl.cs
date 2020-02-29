@@ -37,7 +37,7 @@ namespace EstusShots.Gtk.Controls
             TreeView.Model = ListStore;
             Items = new List<T>();
 
-            TreeView.Selection.Changed += TreeView_SelectionChanged;
+            TreeView.RowActivated += TreeViewOnRowActivated;
         }
 
         /// <summary> The GTK ListStore that is managed by this <see cref="BindableListControl{T}" />. </summary>
@@ -99,10 +99,11 @@ namespace EstusShots.Gtk.Controls
                 Console.WriteLine(e);
             }
         }
-
-        private void TreeView_SelectionChanged(object sender, EventArgs e)
+        
+        private void TreeViewOnRowActivated(object o, RowActivatedArgs args)
         {
-            if (!(sender is TreeSelection selection)) return;
+            if (!(o is TreeView tree)) return;
+            var selection = tree.Selection;
             selection.GetSelected(out var model, out var iter);
             var key = model.GetValue(iter, 0);
             var item = Items.FirstOrDefault(x =>
