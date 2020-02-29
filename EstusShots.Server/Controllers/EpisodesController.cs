@@ -22,6 +22,7 @@ namespace EstusShots.Server.Controllers
             _episodesService = episodesService;
         }
 
+        [HttpPost]
         public async Task<ApiResponse<GetEpisodesResponse>> GetEpisodes(GetEpisodesParameter parameter)
         {
             try
@@ -36,6 +37,7 @@ namespace EstusShots.Server.Controllers
             }
         }
 
+        [HttpPost]
         public async Task<ApiResponse<GetEpisodeResponse>> GetEpisode(GetEpisodeParameter parameter)
         {
             try
@@ -50,6 +52,7 @@ namespace EstusShots.Server.Controllers
             }
         }
 
+        [HttpPost]
         public async Task<ApiResponse<SaveEpisodeResponse>> SaveEpisode(SaveEpisodeParameter parameter)
         {
             try
