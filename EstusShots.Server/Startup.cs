@@ -25,7 +25,11 @@ namespace EstusShots.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<EstusShotsContext>(
-                opt => opt.UseInMemoryDatabase("debug.db"));
+                opt =>
+                {
+                    opt.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                    opt.UseSqlite(Configuration.GetConnectionString("Sqlite"));
+                });
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers().AddJsonOptions(options =>
             {
@@ -57,6 +61,7 @@ namespace EstusShots.Server
             {
                 app.UseHttpsRedirection();
             }
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -69,7 +74,6 @@ namespace EstusShots.Server
 
             app.UseRouting();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
