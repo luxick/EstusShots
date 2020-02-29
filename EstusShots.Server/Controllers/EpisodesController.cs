@@ -1,38 +1,39 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using EstusShots.Server.Services;
+using EstusShots.Shared.Interfaces;
+using EstusShots.Shared.Models;
+using EstusShots.Shared.Models.Parameters;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Dto = EstusShots.Shared.Dto;
 
 namespace EstusShots.Server.Controllers
 {
     [ApiController]
-    [Route("/api/[controller]")]
-    public class EpisodesController : ControllerBase
-    {        
-        private readonly EstusShotsContext _context;
-        private readonly IMapper _mapper;
+    [Route("/api/[controller]/[action]")]
+    public class EpisodesController : ControllerBase, IEpisodesController
+    {
         private readonly ILogger _logger;
+        private readonly EpisodesService _episodesService;
 
-        public EpisodesController(ILogger<EpisodesController> logger, IMapper mapper, EstusShotsContext context)
+        public EpisodesController(ILogger<EpisodesController> logger, EpisodesService episodesService)
         {
             _logger = logger;
-            _mapper = mapper;
-            _context = context;
+            _episodesService = episodesService;
         }
-        
-        [HttpGet("seasonId")]
-        public async Task<ActionResult<List<Dto.Episode>>> GetEpisodes(Guid seasonId)
-        {   
-            _logger.LogDebug($"All");
-            var episodes = await _context.Episodes.Where(x => x.SeasonId == seasonId).ToListAsync();
-            var dtos = _mapper.Map<List<Dto.Episode>>(episodes);
-            return dtos;
+
+        public async Task<ApiResponse<GetEpisodesResponse>> GetEpisodes(GetEpisodesParameter parameter)
+        {
+            try
+            {
+                _logger.LogInformation($"Request received from client '{Request.HttpContext.Connection.RemoteIpAddress}'");
+                return await _episodesService.GetEpisodes(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Exception Occured");
+                return new ApiResponse<GetEpisodesResponse>(new OperationResult(e));
+            }
         }
     }
 }

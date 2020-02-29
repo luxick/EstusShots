@@ -55,10 +55,14 @@ namespace EstusShots.Gtk
         private EstusShotsClient Client { get; }
         private BindableListControl<Season> SeasonsControl { get; }
 
-        private void SeasonsViewOnOnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void SeasonsViewOnOnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(e.Selection is Season season)) return;
-            Info($"Season '{season.DisplayName}' selected");
+            
+            // TODO this is test code
+            var parameter = new GetEpisodesParameter(season.SeasonId);
+            var res = await Client.Episodes.GetEpisodes(parameter);
+            Info($"{season.DisplayName}: {res.Data.Episodes.Count} episodes");
         }
 
         private async void NewSeasonButtonOnClicked(object sender, EventArgs e)

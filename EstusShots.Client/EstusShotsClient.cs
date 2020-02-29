@@ -21,6 +21,7 @@ namespace EstusShots.Client
         
         // API Routes
         public Seasons Seasons { get; }
+        public Episodes Episodes { get; }
 
         /// <summary>
         /// Creates a new instance of <see cref="EstusShotsClient"/>
@@ -32,6 +33,7 @@ namespace EstusShots.Client
             HttpClient = new HttpClient {Timeout = TimeSpan.FromSeconds(10)};
             
             Seasons = new Seasons(this);
+            Episodes = new Episodes(this);
         }
         
         /// <summary>

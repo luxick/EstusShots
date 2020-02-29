@@ -1,4 +1,5 @@
 using System;
+using EstusShots.Shared.Interfaces;
 
 namespace EstusShots.Shared.Models
 {
@@ -60,4 +61,6 @@ namespace EstusShots.Shared.Models
             Data = data;
         }
     }
+    
+    public class CriticalErrorResponse :IApiResponse{}
 }

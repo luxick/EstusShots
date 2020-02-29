@@ -29,6 +29,7 @@ namespace EstusShots.Server
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers().AddJsonOptions(options =>
             {
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 if (IsDevelopment)
                 {
                     options.JsonSerializerOptions.WriteIndented = true;
@@ -38,7 +39,10 @@ namespace EstusShots.Server
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Estus Shots API", Version = "v1" });
             });
+
+            // Register business logic services 
             services.AddScoped<SeasonsService>();
+            services.AddScoped<EpisodesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +69,7 @@ namespace EstusShots.Server
 
             app.UseRouting();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
