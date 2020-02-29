@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Clean up
+echo "Cleaning up build directory"
+[ -d "Publish" ] && rm -r Publish
+
 # Publish Server
 echo "Running dotnet publish for server"
 dotnet publish \
