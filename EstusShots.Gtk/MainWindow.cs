@@ -14,6 +14,9 @@ namespace EstusShots.Gtk
     internal class MainWindow : Window
     {
         private const string ApiUrl = "http://localhost:5000/api/";
+        private const string ApplicationName = "Estus Shots";
+        private const string Version = "0.1";
+        private const int EpisodesPageNumber = 1;
         
         [UI] private readonly Label _infoLabel = null;
         [UI] public readonly Button LoadButton = null;
@@ -52,6 +55,7 @@ namespace EstusShots.Gtk
             EpisodesPage.Hide();
             
             Info("Application Started");
+            UpdateTitle();
 
             // No need to wait for the loading to finnish
             var _ = ReloadSeasons();
@@ -76,6 +80,13 @@ namespace EstusShots.Gtk
             };
             SeasonsControl = new BindableListControl<Season>(columns, nameof(Season.SeasonId), SeasonsView);
             SeasonsControl.OnSelectionChanged += SeasonsViewOnOnSelectionChanged;
+            SeasonsControl.TreeView.RowActivated += SeasonsViewOnRowActivated;
+        }
+
+        private void SeasonsViewOnRowActivated(object o, RowActivatedArgs args)
+        {
+            UpdateTitle();
+            Navigation.Page = EpisodesPageNumber;
         }
 
         private void InitEpisodesControl()
@@ -226,6 +237,13 @@ namespace EstusShots.Gtk
         private void Info(string message)
         {
             _infoLabel.Text = message;
+        }
+
+        private void UpdateTitle()
+        {
+            Title = SeasonsControl.SelectedItem == null 
+                ? $"{ApplicationName} v{Version}" 
+                : $"{SeasonsControl.SelectedItem.DisplayName} - {ApplicationName} v{Version}";
         }
     }
 }
