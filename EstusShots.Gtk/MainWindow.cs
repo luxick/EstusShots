@@ -1,8 +1,10 @@
 using EstusShots.Client;
 using EstusShots.Gtk.Controls;
 using EstusShots.Shared.Dto;
+using Gdk;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
+using Window = Gtk.Window;
 
 namespace EstusShots.Gtk
 {
@@ -30,7 +32,9 @@ namespace EstusShots.Gtk
             Client = new EstusShotsClient(ApiUrl);
 
             DeleteEvent += Window_DeleteEvent;
-
+            
+            Icon = Pixbuf.LoadFromResource("icon.png");
+            
             // Call initialization code of each page
             InitSeasonsPage();
             InitEpisodesPage();

@@ -41,7 +41,6 @@
     <property name="title" translatable="yes">Estus Shots</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
-    <property name="icon">Icons/icon.png</property>
     <child>
       <placeholder/>
     </child>
