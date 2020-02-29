@@ -23,6 +23,7 @@ namespace EstusShots.Server.Controllers
             _logger = logger;
         }
         
+        [HttpPost]
         public async Task<ApiResponse<GetSeasonsResponse>> GetSeasons(GetSeasonsParameter parameter)
         {
             try
@@ -37,6 +38,7 @@ namespace EstusShots.Server.Controllers
             }
         }
         
+        [HttpPost]
         public async Task<ApiResponse<GetSeasonResponse>> GetSeason(GetSeasonParameter parameter)
         {
             try
@@ -51,6 +53,7 @@ namespace EstusShots.Server.Controllers
             }
         }
 
+        [HttpPost]
         public async Task<ApiResponse<SaveSeasonResponse>> SaveSeason(SaveSeasonParameter parameter)
         {
             try
