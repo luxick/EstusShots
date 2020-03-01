@@ -1,8 +1,14 @@
+using System;
+using System.Threading.Tasks;
 using EstusShots.Client;
 using EstusShots.Gtk.Controls;
+using EstusShots.Gtk.Dialogs;
 using EstusShots.Shared.Dto;
+using EstusShots.Shared.Models;
 using Gdk;
+using GLib;
 using Gtk;
+using Application = Gtk.Application;
 using UI = Gtk.Builder.ObjectAttribute;
 using Window = Gtk.Window;
 
@@ -18,6 +24,8 @@ namespace EstusShots.Gtk
         [UI] public readonly Label InfoLabel = null;
         [UI] public readonly Box LoadingSpinner = null;
         [UI] public readonly Notebook Navigation = null;
+        
+        
 
         private EstusShotsClient Client { get; }
         private BindableListControl<Episode> EpisodesControl { get; set; }
@@ -31,6 +39,8 @@ namespace EstusShots.Gtk
             builder.Autoconnect(this);
             Client = new EstusShotsClient(ApiUrl);
 
+            ErrorDialog.MainWindow = this;
+            ExceptionManager.UnhandledException += ExceptionManagerOnUnhandledException;
             DeleteEvent += Window_DeleteEvent;
             
             Icon = Pixbuf.LoadFromResource("icon.png");
@@ -47,6 +57,12 @@ namespace EstusShots.Gtk
 
             Info("Application Started");
             UpdateTitle();
+        }
+
+        private void ExceptionManagerOnUnhandledException(UnhandledExceptionArgs args)
+        {
+            Console.WriteLine(args.ExceptionObject);
+            args.ExitApplication = false;
         }
 
         private void Window_DeleteEvent(object sender, DeleteEventArgs a)

@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using EstusShots.Client.Routes;
+using EstusShots.Shared.Dto;
 using EstusShots.Shared.Interfaces;
 using EstusShots.Shared.Models;
 
@@ -22,6 +23,7 @@ namespace EstusShots.Client
         // API Routes
         public Seasons Seasons { get; }
         public Episodes Episodes { get; }
+        public Players Players { get; }
 
         /// <summary>
         /// Creates a new instance of <see cref="EstusShotsClient"/>
@@ -34,6 +36,7 @@ namespace EstusShots.Client
             
             Seasons = new Seasons(this);
             Episodes = new Episodes(this);
+            Players = new Players(this);
         }
         
         /// <summary>

@@ -1,6 +1,8 @@
 using System;
+using System.Threading.Tasks;
 using EstusShots.Gtk.Dialogs;
 using EstusShots.Shared.Dto;
+using EstusShots.Shared.Models.Parameters;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
@@ -28,11 +30,38 @@ namespace EstusShots.Gtk
             dialog.OnDialogClosed += PlayerEditorClosed;
         }
 
-        private void PlayerEditorClosed(object o, DialogClosedEventArgs args)
+        private async void PlayerEditorClosed(object o, DialogClosedEventArgs args)
         {
             if (!args.Ok || !(args.Model is Player player)) return;
-            // TODO
-            // Client.Players.SavePlayer();
+            var res = await Task.Factory.StartNew(() 
+                => Client.Players.SavePlayer(new SavePlayerParameter(player)).Result);
+            if (!res.OperationResult.Success)
+            {
+                Info($"Unable to save: {res.OperationResult.ShortMessage}");
+                ErrorDialog.Show(res.OperationResult);
+                return;
+            }
+
+            // ReloadPlayers();
+        }
+        
+        // Private Methods
+
+        private async void ReloadPlayers()
+        {
+            var res = await Task.Factory.StartNew(()
+                => Client.Players.GetPlayers(new GetPlayersParameter()).Result);
+            if (!res.OperationResult.Success)
+            {
+                InfoLabel.Text = $"Refresh failed: {res.OperationResult.ShortMessage}";
+                ErrorDialog.Show(res.OperationResult);
+                return;
+            }
+
+            // TODO 
+            // SeasonsControl.Items = res.Data.Seasons;
+            // SeasonsControl.DataBind();
+            // Info("Player list refreshed");
         }
     }
 }

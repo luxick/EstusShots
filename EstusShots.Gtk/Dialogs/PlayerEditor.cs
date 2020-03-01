@@ -43,8 +43,8 @@ namespace EstusShots.Gtk.Dialogs
             
             SavePlayerButton.Clicked += SavePlayerButtonOnClicked;
 
-            PlayerEditorDialog.Parent = parent;
             PlayerEditorDialog.TransientFor = parent;
+            PlayerEditorDialog.Show();
 
             ReadFromModel();
         }
@@ -55,6 +55,7 @@ namespace EstusShots.Gtk.Dialogs
         {
             ReadToModel();
             OnDialogClosed?.Invoke(this, new DialogClosedEventArgs(true, _player));
+            PlayerEditorDialog.Dispose();
         }
         
         // Private Methods

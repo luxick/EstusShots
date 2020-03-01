@@ -47,6 +47,7 @@ namespace EstusShots.Server
             // Register business logic services 
             services.AddScoped<SeasonsService>();
             services.AddScoped<EpisodesService>();
+            services.AddScoped<PlayersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

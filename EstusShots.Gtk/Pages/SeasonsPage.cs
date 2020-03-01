@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EstusShots.Gtk.Controls;
+using EstusShots.Gtk.Dialogs;
 using EstusShots.Shared.Dto;
 using EstusShots.Shared.Models.Parameters;
 using Gtk;
@@ -55,6 +56,7 @@ namespace EstusShots.Gtk
             if (!res.OperationResult.Success)
             {
                 InfoLabel.Text = $"Error while creating Season: {res.OperationResult.ShortMessage}";
+                ErrorDialog.Show(res.OperationResult);
                 return;
             }
 
@@ -88,6 +90,7 @@ namespace EstusShots.Gtk
             if (!res.OperationResult.Success)
             {
                 InfoLabel.Text = $"Refresh Failed: {res.OperationResult.ShortMessage}";
+                ErrorDialog.Show(res.OperationResult);
                 return;
             }
 
