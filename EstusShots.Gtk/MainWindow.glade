@@ -344,12 +344,11 @@
                         <property name="spacing">5</property>
                         <property name="layout_style">start</property>
                         <child>
-                          <object class="GtkButton" id="SavePlayerButton">
-                            <property name="label">gtk-save</property>
+                          <object class="GtkButton" id="NewPlayerButton">
+                            <property name="label" translatable="yes">New Player</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="use_stock">True</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -358,18 +357,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="DeletePlayerButton">
-                            <property name="label">gtk-delete</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="use_stock">True</property>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                         <child>
                           <placeholder/>
