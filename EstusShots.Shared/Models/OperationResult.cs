@@ -1,11 +1,12 @@
 using System;
+using System.Linq;
 using EstusShots.Shared.Interfaces;
 
 namespace EstusShots.Shared.Models
 {
     public class OperationResult
     {
-        public bool Success { get; }
+        public bool Success { get; set; }
         public string ShortMessage { get; set; }
         public string DetailedMessage { get; set; }
         public string StackTrace { get; set; }
@@ -24,9 +25,10 @@ namespace EstusShots.Shared.Models
 
         public OperationResult(Exception e)
         {
+            var splitMessage = e.Message.Split('\n');
             Success = false;
-            ShortMessage = e.Message;
-            DetailedMessage = e.InnerException?.Message;
+            ShortMessage = splitMessage.FirstOrDefault();
+            DetailedMessage = string.Join("\n", splitMessage.Skip(1)).Trim('\n');
             StackTrace = e.StackTrace;
         }
     }
