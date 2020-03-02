@@ -1,10 +1,13 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using EstusShots.Server.Models;
 using EstusShots.Shared.Interfaces;
 using EstusShots.Shared.Models;
 using EstusShots.Shared.Models.Parameters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Dto = EstusShots.Shared.Dto;
 
 namespace EstusShots.Server.Services
 {
@@ -23,26 +26,42 @@ namespace EstusShots.Server.Services
 
         public async Task<ApiResponse<GetPlayersResponse>> GetPlayers(GetPlayersParameter parameter)
         {
-            throw new System.NotImplementedException();
+            var players = await _context.Players.ToListAsync();
+            var dtos = _mapper.Map<List<Dto.Player>>(players);
+            return new ApiResponse<GetPlayersResponse>(new GetPlayersResponse(dtos));
         }
 
         public async Task<ApiResponse<GetPlayerDetailsResponse>> GetPlayerDetails(GetPlayerDetailsParameter parameter)
         {
-            throw new System.NotImplementedException();
+            var player = await _context.Players.FindAsync(parameter.PlayerId);
+            if (player == null)
+            {
+                _logger.LogWarning($"Player '{parameter.PlayerId}' not found in database");
+                return new ApiResponse<GetPlayerDetailsResponse>(new OperationResult(false, "Player not found"));
+            }
+
+            var dto = _mapper.Map<Dto.Player>(player);
+            return new ApiResponse<GetPlayerDetailsResponse>(new GetPlayerDetailsResponse(dto));
         }
 
         public async Task<ApiResponse<SavePlayerResponse>> SavePlayer(SavePlayerParameter parameter)
         {
-            var player = _mapper.Map<Player>(parameter.Player);
-            if (player.PlayerId.IsEmpty())
+            if (parameter.Player.PlayerId.IsEmpty())
             {
-                _context.Players.Add(player);
+                _context.Players.Add(_mapper.Map<Player>(parameter.Player));
                 var count = await _context.SaveChangesAsync();
                 _logger.LogInformation($"Created {count} rows");
+                return new ApiResponse<SavePlayerResponse>(new SavePlayerResponse(parameter.Player.PlayerId));
+            }
+            else
+            {
+                var player = await _context.Players.FindAsync(parameter.Player.PlayerId);
+                _context.Players.Update(player);
+                _mapper.Map(parameter.Player, player);
+                var count = await _context.SaveChangesAsync();
+                _logger.LogInformation($"Updated player '{player.PlayerId}'");
                 return new ApiResponse<SavePlayerResponse>(new SavePlayerResponse(player.PlayerId));
             }
-            // TODO Update Player
-            return new ApiResponse<SavePlayerResponse>(new OperationResult(false, "NotImplemented"));
         }
 
         public async Task<ApiResponse<DeletePlayerResponse>> DeletePlayers(DeletePlayerParameter parameter)

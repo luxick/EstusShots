@@ -42,6 +42,11 @@ namespace EstusShots.Gtk.Dialogs
             _builder.Autoconnect(this);
             
             SavePlayerButton.Clicked += SavePlayerButtonOnClicked;
+            CancelPlayerEditorButton.Clicked += (sender, args) =>
+            {
+                OnDialogClosed?.Invoke(this, new DialogClosedEventArgs(false, null));
+                PlayerEditorDialog.Dispose();
+            };
 
             PlayerEditorDialog.TransientFor = parent;
             PlayerEditorDialog.Show();

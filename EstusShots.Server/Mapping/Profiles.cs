@@ -12,6 +12,9 @@ namespace EstusShots.Server.Mapping
 
             CreateMap<Episode, Shared.Dto.Episode>();
             CreateMap<Shared.Dto.Episode, Episode>();
+            
+            CreateMap<Player, Shared.Dto.Player>();
+            CreateMap<Shared.Dto.Player, Player>();
         }
     }
 }

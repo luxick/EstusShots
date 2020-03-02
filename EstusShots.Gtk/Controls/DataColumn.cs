@@ -1,27 +1,26 @@
 using System;
+using Gtk;
 
 namespace EstusShots.Gtk.Controls
 {
-    public class DataColumn
+    public class DataColumn : TreeViewColumn
     {
         public DataColumn()
         {
+            Resizable = true;
+            Reorderable = true;
         }
 
         public DataColumn(string propertyName)
         {
             PropertyName = propertyName;
+            Title = propertyName;
         }
 
         /// <summary>
         ///     The name of the property in the data source, that should be show nin the view
         /// </summary>
         public string PropertyName { get; }
-
-        /// <summary>
-        ///     The column header.
-        /// </summary>
-        public string Title { get; set; }
 
         /// <summary>
         ///     Applies the given transformation on each item in the column.

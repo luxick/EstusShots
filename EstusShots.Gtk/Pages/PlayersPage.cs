@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using EstusShots.Gtk.Controls;
 using EstusShots.Gtk.Dialogs;
 using EstusShots.Shared.Dto;
 using EstusShots.Shared.Models.Parameters;
@@ -15,14 +17,34 @@ namespace EstusShots.Gtk
         [UI] public readonly TreeView PlayersTreeView = null;
         [UI] public readonly Button NewPlayerButton = null;
         [UI] public readonly Box PlayerEditorContainer = null;
-        
+
+        private BindableListControl<Player> PlayersControl;
 
         private void InitPlayersPage()
         {
             NewPlayerButton.Clicked += NewPlayerButtonOnClicked;
+
+            var columns = new List<DataColumn>
+            {
+                new DataColumn(nameof(Player.Name)),
+                new DataColumn(nameof(Player.Alias)),
+                new DataColumn(nameof(Player.HexId)) {Title = "Hex ID"},
+                new DataColumn(nameof(Player.Anonymous)) {Title = "Is Anonymous?", FixedWidth = 30}
+            };
+            PlayersControl = new BindableListControl<Player>(columns, nameof(Player.PlayerId), PlayersTreeView);
+            PlayersControl.OnSelectionChanged += PlayersControlOnOnSelectionChanged;
+            
+            Task.Factory.StartNew(ReloadPlayers);
         }
 
         // Events 
+
+        private void PlayersControlOnOnSelectionChanged(object o, SelectionChangedEventArgs args)
+        {
+            if (!(args.Selection is Player player)) return;
+            var dialog = new PlayerEditor(this, player);
+            dialog.OnDialogClosed += PlayerEditorClosed;
+        }
         
         private void NewPlayerButtonOnClicked(object sender, EventArgs e)
         {
@@ -33,7 +55,7 @@ namespace EstusShots.Gtk
         private async void PlayerEditorClosed(object o, DialogClosedEventArgs args)
         {
             if (!args.Ok || !(args.Model is Player player)) return;
-            var res = await Task.Factory.StartNew(() 
+            var res = await Task.Factory.StartNew(()
                 => Client.Players.SavePlayer(new SavePlayerParameter(player)).Result);
             if (!res.OperationResult.Success)
             {
@@ -42,12 +64,12 @@ namespace EstusShots.Gtk
                 return;
             }
 
-            // ReloadPlayers();
+            await ReloadPlayers();
         }
-        
+
         // Private Methods
 
-        private async void ReloadPlayers()
+        private async Task ReloadPlayers()
         {
             var res = await Task.Factory.StartNew(()
                 => Client.Players.GetPlayers(new GetPlayersParameter()).Result);
@@ -58,10 +80,9 @@ namespace EstusShots.Gtk
                 return;
             }
 
-            // TODO 
-            // SeasonsControl.Items = res.Data.Seasons;
-            // SeasonsControl.DataBind();
-            // Info("Player list refreshed");
+            PlayersControl.Items = res.Data.Players;
+            PlayersControl.DataBind();
+            Info("Player list refreshed");
         }
     }
 }

@@ -100,7 +100,7 @@ namespace EstusShots.Gtk.Controls
             }
         }
         
-        private void TreeViewOnRowActivated(object o, RowActivatedArgs args)
+        private void TreeViewOnRowActivated(object o, RowActivatedArgs args) 
         {
             if (!(o is TreeView tree)) return;
             var selection = tree.Selection;
@@ -128,17 +128,33 @@ namespace EstusShots.Gtk.Controls
             foreach (var dataColumn in Columns)
             {
                 // Offset by one, because the first column in the data store is fixed to the key value of the row
-                var index = Columns.IndexOf(dataColumn) + 1;
-                var column = new TreeViewColumn(
-                    dataColumn.Title,
-                    new CellRendererText(),
-                    "text", index)
-                {
-                    Resizable = true,
-                    Reorderable = true
-                };
-                TreeView.AppendColumn(column);
+                var valueIndex = Columns.IndexOf(dataColumn) + 1;
+                var cell = GetRenderer(dataColumn);
+                var attr = GetAttribute(dataColumn);
+                dataColumn.PackStart(cell, true);
+                dataColumn.AddAttribute(cell, attr, valueIndex);
+                TreeView.AppendColumn(dataColumn);
             }
+        }
+
+        private CellRenderer GetRenderer(DataColumn column)
+        {
+            var property = typeof(T).GetProperty(column.PropertyName);
+            return property?.PropertyType.Name switch
+            {
+                nameof(Boolean) => new CellRendererToggle(),
+                _ => new CellRendererText()
+            };
+        }
+
+        private string GetAttribute(DataColumn column)
+        {
+            var property = typeof(T).GetProperty(column.PropertyName);
+            return property?.PropertyType.Name switch
+            {
+                nameof(Boolean) => "active",
+                _ => "text"
+            };
         }
 
         private void InitListStore()
