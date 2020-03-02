@@ -47,7 +47,7 @@ namespace EstusShots.Client
         /// <typeparam name="TResult">API response class that implements <see cref="IApiResponse"/></typeparam>
         /// <typeparam name="TParam">API parameter class that implements <see cref="IApiParameter"/></typeparam>
         /// <returns></returns>
-        public async Task<ApiResponse<TResult>> PostToApi<TResult, TParam>(string url, TParam parameter) 
+        internal async Task<ApiResponse<TResult>> PostToApi<TResult, TParam>(string url, TParam parameter) 
             where TParam : IApiParameter, new()
             where TResult : class, IApiResponse, new()
         {
