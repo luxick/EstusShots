@@ -74,6 +74,11 @@ namespace EstusShots.Server
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            // Open a scope and create the database, if necessary 
+            using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            using var context = scope.ServiceProvider.GetService<EstusShotsContext>();
+            context.Database.EnsureCreated();
         }
     }
 }

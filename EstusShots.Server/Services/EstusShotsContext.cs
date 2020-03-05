@@ -7,7 +7,6 @@ namespace EstusShots.Server.Services
     {
         public EstusShotsContext(DbContextOptions options) : base(options)
         {
-            Database.EnsureCreated();
         }
 
         public DbSet<Season> Seasons { get; set; } = default!;
