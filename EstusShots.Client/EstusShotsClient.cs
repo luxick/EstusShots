@@ -24,6 +24,7 @@ namespace EstusShots.Client
         public Seasons Seasons { get; }
         public Episodes Episodes { get; }
         public Players Players { get; }
+        public Drinks Drinks { get; }
 
         /// <summary>
         /// Creates a new instance of <see cref="EstusShotsClient"/>
@@ -37,6 +38,7 @@ namespace EstusShots.Client
             Seasons = new Seasons(this);
             Episodes = new Episodes(this);
             Players = new Players(this);
+            Drinks = new Drinks(this);
         }
         
         /// <summary>

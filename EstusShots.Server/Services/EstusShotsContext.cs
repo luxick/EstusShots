@@ -13,6 +13,7 @@ namespace EstusShots.Server.Services
         public DbSet<Season> Seasons { get; set; } = default!;
         public DbSet<Episode> Episodes { get; set; } = default!;
         public DbSet<Player> Players { get; set; } = default!;
+        public DbSet<Drink> Drinks { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

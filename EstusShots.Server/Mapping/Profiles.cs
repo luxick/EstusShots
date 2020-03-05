@@ -15,6 +15,9 @@ namespace EstusShots.Server.Mapping
             
             CreateMap<Player, Shared.Dto.Player>();
             CreateMap<Shared.Dto.Player, Player>();
+            
+            CreateMap<Drink, Shared.Dto.Drink>();
+            CreateMap<Shared.Dto.Drink, Drink>();
         }
     }
 }
