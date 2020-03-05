@@ -48,10 +48,11 @@ namespace EstusShots.Server.Services
         {
             if (parameter.Player.PlayerId.IsEmpty())
             {
-                _context.Players.Add(_mapper.Map<Player>(parameter.Player));
+                var player = _mapper.Map<Player>(parameter.Player);
+                _context.Players.Add(player);
                 var count = await _context.SaveChangesAsync();
-                _logger.LogInformation($"Created {count} rows");
-                return new ApiResponse<SavePlayerResponse>(new SavePlayerResponse(parameter.Player.PlayerId));
+                _logger.LogInformation($"Created player '{player.PlayerId}' ({count} rows updated)");
+                return new ApiResponse<SavePlayerResponse>(new SavePlayerResponse(player.PlayerId));
             }
             else
             {
