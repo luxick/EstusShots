@@ -28,8 +28,8 @@ namespace EstusShots.Gtk
             {
                 new DataColumn(nameof(Player.Name)),
                 new DataColumn(nameof(Player.Alias)),
+                new DataColumn(nameof(Player.Anonymous)) {Title = "Is Anonymous?", FixedWidth = 120},
                 new DataColumn(nameof(Player.HexId)) {Title = "Hex ID"},
-                new DataColumn(nameof(Player.Anonymous)) {Title = "Is Anonymous?", FixedWidth = 30}
             };
             PlayersControl = new BindableListControl<Player>(columns, nameof(Player.PlayerId), PlayersTreeView);
             PlayersControl.OnSelectionChanged += PlayersControlOnOnSelectionChanged;

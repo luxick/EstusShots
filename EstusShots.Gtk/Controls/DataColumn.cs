@@ -11,7 +11,7 @@ namespace EstusShots.Gtk.Controls
             Reorderable = true;
         }
 
-        public DataColumn(string propertyName)
+        public DataColumn(string propertyName) : this()
         {
             PropertyName = propertyName;
             Title = propertyName;

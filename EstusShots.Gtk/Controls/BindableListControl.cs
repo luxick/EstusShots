@@ -84,7 +84,7 @@ namespace EstusShots.Gtk.Controls
                         $"Property '{column.PropertyName}' does not exist on Type '{item.GetType()}'");
                 var val = prop.GetValue(item);
                 if (column.Format != null) val = column.Format(val);
-                row.Add(val.ToString());
+                row.Add(val);
             }
 
             // The key value must be the first value in the row
