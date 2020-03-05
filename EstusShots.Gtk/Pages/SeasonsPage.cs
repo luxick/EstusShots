@@ -32,7 +32,7 @@ namespace EstusShots.Gtk
         }
 
         // Events 
-        
+
         private async void LoadButtonClicked(object sender, EventArgs a)
         {
             using var _ = new LoadingMode(this);
@@ -63,7 +63,7 @@ namespace EstusShots.Gtk
             await ReloadSeasons();
             Info("Created new Season");
         }
-        
+
         private async void SeasonsControlOnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(e.Selection is Season season)) return;
@@ -82,7 +82,7 @@ namespace EstusShots.Gtk
         }
 
         // Private Methods
-        
+
         private async Task ReloadSeasons()
         {
             var res = await Task.Factory.StartNew(
@@ -103,22 +103,19 @@ namespace EstusShots.Gtk
         {
             var columns = new List<DataColumn>
             {
-                new DataColumn(nameof(Season.DisplayName)) {Title = "Name"},
-                new DataColumn(nameof(Season.Description)) {Title = "Description"},
-                new DataColumn(nameof(Season.Start))
+                new DataColumnText(nameof(Season.DisplayName)) {Title = "Name"},
+                new DataColumnText(nameof(Season.Description)),
+                new DataColumnText(nameof(Season.Start))
                 {
-                    Title = "Start",
-                    Format = date => (date as DateTime?)?.ToString("dd.MM.yyyy")
+                    DisplayConverter = date => (date as DateTime?)?.ToString("dd.MM.yyyy")
                 },
-                new DataColumn(nameof(Season.End))
+                new DataColumnText(nameof(Season.End))
                 {
-                    Title = "End",
-                    Format = date => (date as DateTime?)?.ToString("dd.MM.yyyy") ?? "Ongoing"
+                    DisplayConverter = date => (date as DateTime?)?.ToString("dd.MM.yyyy") ?? "Ongoing"
                 }
             };
             SeasonsControl = new BindableListControl<Season>(columns, nameof(Season.SeasonId), SeasonsView);
             SeasonsControl.OnSelectionChanged += SeasonsControlOnSelectionChanged;
         }
-
     }
 }

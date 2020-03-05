@@ -20,11 +20,9 @@ namespace EstusShots.Gtk.Dialogs
     
     public class PlayerEditor
     {
-        private Builder _builder;
-        private Player _player;
+        private readonly Player _player;
 
         [UI] private readonly Dialog PlayerEditorDialog = null;
-        [UI] private readonly Overlay PlayerEditorOverlay = null;
         [UI] private readonly Entry PlayerNameEntry = null;
         [UI] private readonly Entry PlayerAliasEntry = null;
         [UI] private readonly Entry PlayerHexIdEntry = null;
@@ -38,8 +36,8 @@ namespace EstusShots.Gtk.Dialogs
         {
             _player = player;
             
-            _builder = new Builder("Dialogs.glade");
-            _builder.Autoconnect(this);
+            var builder = new Builder("Dialogs.glade");
+            builder.Autoconnect(this);
             
             SavePlayerButton.Clicked += SavePlayerButtonOnClicked;
             CancelPlayerEditorButton.Clicked += (sender, args) =>

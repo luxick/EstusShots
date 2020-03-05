@@ -14,16 +14,20 @@ namespace EstusShots.Gtk
     {
         [UI] public readonly Box EpisodesPage = null;
         [UI] public readonly Button AddEpisodeButton = null;
-        [UI] public readonly Overlay EpisodesOverlay = null;
         [UI] public readonly TreeView EpisodesTreeView = null;
-        
+
+        private BindableListControl<Episode> EpisodesControl { get; set; }
+
+
         private void InitEpisodesPage()
         {
             AddEpisodeButton.Clicked += AddEpisodeButtonOnClicked;
+
+            CreateEpisodesControl();
         }
-        
-        // Eevents
-        
+
+        // Events
+
         private async void AddEpisodeButtonOnClicked(object sender, EventArgs e)
         {
             if (SeasonsControl.SelectedItem == null) return;
@@ -64,9 +68,9 @@ namespace EstusShots.Gtk
 
             await ReloadEpisodes();
         }
-        
+
         // Private Methods
-        
+
         private async Task ReloadEpisodes()
         {
             var seasonId = SeasonsControl.SelectedItem.SeasonId;
@@ -82,27 +86,27 @@ namespace EstusShots.Gtk
             EpisodesControl.DataBind();
             Info("Episodes Refreshed");
         }
-        
+
         private void CreateEpisodesControl()
         {
             var columns = new List<DataColumn>
             {
-                new DataColumn(nameof(Episode.DisplayName)) {Title = "Name"},
-                new DataColumn(nameof(Episode.Title)) {Title = "Title"},
-                new DataColumn(nameof(Episode.Date))
+                new DataColumnText(nameof(Episode.DisplayName)) {Title = "Name"},
+                new DataColumnText(nameof(Episode.Title)) {Title = "Title"},
+                new DataColumnText(nameof(Episode.Date))
                 {
                     Title = "Date",
-                    Format = d => (d as DateTime?)?.ToString("dd.MM.yyyy")
+                    DisplayConverter = d => (d as DateTime?)?.ToString("dd.MM.yyyy")
                 },
-                new DataColumn(nameof(Episode.Start))
+                new DataColumnText(nameof(Episode.Start))
                 {
                     Title = "Start",
-                    Format = d => (d as DateTime?)?.ToString("HH:mm")
+                    DisplayConverter = d => (d as DateTime?)?.ToString("HH:mm")
                 },
-                new DataColumn(nameof(Episode.End))
+                new DataColumnText(nameof(Episode.End))
                 {
                     Title = "End",
-                    Format = d => (d as DateTime?)?.ToString("HH:mm") ?? "Ongoing"
+                    DisplayConverter = d => (d as DateTime?)?.ToString("HH:mm") ?? "Ongoing"
                 }
             };
             EpisodesControl = new BindableListControl<Episode>(columns, nameof(Episode.EpisodeId), EpisodesTreeView);

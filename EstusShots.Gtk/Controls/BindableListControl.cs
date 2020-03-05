@@ -83,7 +83,7 @@ namespace EstusShots.Gtk.Controls
                     throw new TypeLoadException(
                         $"Property '{column.PropertyName}' does not exist on Type '{item.GetType()}'");
                 var val = prop.GetValue(item);
-                if (column.Format != null) val = column.Format(val);
+                if (column.DisplayConverter != null) val = column.DisplayConverter(val);
                 row.Add(val);
             }
 
@@ -129,34 +129,11 @@ namespace EstusShots.Gtk.Controls
             {
                 // Offset by one, because the first column in the data store is fixed to the key value of the row
                 var valueIndex = Columns.IndexOf(dataColumn) + 1;
-                var cell = GetRenderer(dataColumn);
-                var attr = GetAttribute(dataColumn);
-                dataColumn.PackStart(cell, true);
-                dataColumn.AddAttribute(cell, attr, valueIndex);
+                dataColumn.AddAttribute(dataColumn.Cell, dataColumn.ValueAttribute, valueIndex);
                 TreeView.AppendColumn(dataColumn);
             }
         }
-
-        private CellRenderer GetRenderer(DataColumn column)
-        {
-            var property = typeof(T).GetProperty(column.PropertyName);
-            return property?.PropertyType.Name switch
-            {
-                nameof(Boolean) => new CellRendererToggle(),
-                _ => new CellRendererText()
-            };
-        }
-
-        private string GetAttribute(DataColumn column)
-        {
-            var property = typeof(T).GetProperty(column.PropertyName);
-            return property?.PropertyType.Name switch
-            {
-                nameof(Boolean) => "active",
-                _ => "text"
-            };
-        }
-
+        
         private void InitListStore()
         {
             var types = Columns

@@ -1,10 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using EstusShots.Client;
-using EstusShots.Gtk.Controls;
 using EstusShots.Gtk.Dialogs;
-using EstusShots.Shared.Dto;
-using EstusShots.Shared.Models;
 using Gdk;
 using GLib;
 using Gtk;
@@ -25,10 +21,7 @@ namespace EstusShots.Gtk
         [UI] public readonly Box LoadingSpinner = null;
         [UI] public readonly Notebook Navigation = null;
         
-        
-
         private EstusShotsClient Client { get; }
-        private BindableListControl<Episode> EpisodesControl { get; set; }
 
         public MainWindow() : this(new Builder("MainWindow.glade"))
         {
@@ -48,15 +41,21 @@ namespace EstusShots.Gtk
             // Call initialization code of each page
             InitSeasonsPage();
             InitEpisodesPage();
-            InitPlayersPage();
-
-            CreateEpisodesControl();
+            InitBaseDataPage();
 
             // The episodes page is not shown, as long as no season is selected 
             EpisodesPage.Hide();
+            
+            Navigation.SwitchPage += NavigationOnSwitchPage;
 
             Info("Application Started");
             UpdateTitle();
+        }
+
+        private void NavigationOnSwitchPage(object o, SwitchPageArgs args)
+        {
+            if (!(args.Page is Box appPage)) return;
+            
         }
 
         private void ExceptionManagerOnUnhandledException(UnhandledExceptionArgs args)

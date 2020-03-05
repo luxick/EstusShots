@@ -65,7 +65,7 @@ namespace EstusShots.Server.Services
             }
         }
 
-        public async Task<ApiResponse<DeletePlayerResponse>> DeletePlayers(DeletePlayerParameter parameter)
+        public Task<ApiResponse<DeletePlayerResponse>> DeletePlayers(DeletePlayerParameter parameter)
         {
             throw new System.NotImplementedException();
         }
