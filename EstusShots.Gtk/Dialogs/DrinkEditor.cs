@@ -1,63 +1,31 @@
-using System;
 using EstusShots.Shared.Dto;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
 namespace EstusShots.Gtk.Dialogs
 {
-    public class DrinkEditor
+    public class DrinkEditor : DialogBase<Drink>
     {
-        [UI] private readonly Dialog DrinkEditorDialog = null;
-        [UI] private readonly Entry DrinkNameEntry = null;
-        [UI] private readonly Adjustment DrinkVolAdjustment = null;
-        [UI] private readonly Button SaveDrinkButton = null;
-        [UI] private readonly Button CancelDrinkEditorButton = null;
-        
-        private readonly Drink _drink;
-        
-        public event DialogClosedEventHandler OnDialogClosed;
+        [UI] private readonly Entry _nameEntry = null;
+        [UI] private readonly Adjustment _volAdjustment = null;
 
-        public DrinkEditor(Window parent, Drink drink)
+        public DrinkEditor(Window parent, Drink drink) : base(parent, new Builder("DrinkEditor.glade"))
         {
-            _drink = drink;
-            
+            EditObject = drink;
             var builder = new Builder("Dialogs.glade");
             builder.Autoconnect(this);
-            
-            SaveDrinkButton.Clicked += SaveDrinkButtonOnClicked;
-            CancelDrinkEditorButton.Clicked += (sender, args) =>
-            {
-                OnDialogClosed?.Invoke(this, new DialogClosedEventArgs(false, null));
-                DrinkEditorDialog.Dispose();
-            };
-            
-            ReadFromModel();
-            
-            DrinkEditorDialog.TransientFor = parent;
-            DrinkEditorDialog.Show();
-        }
-
-        // Events
-
-        private void SaveDrinkButtonOnClicked(object sender, EventArgs e)
-        {
-            ReadToModel();
-            OnDialogClosed?.Invoke(this, new DialogClosedEventArgs(true, _drink));
-            DrinkEditorDialog.Dispose();
         }
         
-        // Private Methods
-
-        private void ReadToModel()
+        protected override void LoadToModel()
         {
-            _drink.Name = DrinkNameEntry.Text;
-            _drink.Vol = DrinkVolAdjustment.Value;
+            EditObject.Name = _nameEntry.Text;
+            EditObject.Vol = _volAdjustment.Value;
         }
 
-        private void ReadFromModel()
+        protected override void LoadFromModel()
         {
-            DrinkNameEntry.Text = _drink.Name;
-            DrinkVolAdjustment.Value = _drink.Vol;
+            _nameEntry.Text = EditObject.Name;
+            _volAdjustment.Value = EditObject.Vol;
         }
     }
 }

@@ -1,69 +1,35 @@
-using System;
 using EstusShots.Shared.Dto;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
 namespace EstusShots.Gtk.Dialogs
 {
-    public class PlayerEditor
+    public class PlayerEditor : DialogBase<Player>
     {
-        private readonly Player _player;
-
-        [UI] private readonly Dialog PlayerEditorDialog = null;
-        [UI] private readonly Entry PlayerNameEntry = null;
-        [UI] private readonly Entry PlayerAliasEntry = null;
-        [UI] private readonly Entry PlayerHexIdEntry = null;
-        [UI] private readonly CheckButton PlayerAnonymousCheckButton = null;
-        [UI] private readonly Button CancelPlayerEditorButton = null;
-        [UI] private readonly Button SavePlayerButton = null;
-
-        public event DialogClosedEventHandler OnDialogClosed;
+        [UI] private readonly Entry _nameEntry = null;
+        [UI] private readonly Entry _aliasEntry = null;
+        [UI] private readonly Entry _hexIdEntry = null;
+        [UI] private readonly CheckButton _anonCheckButton = null;
         
-        public PlayerEditor(Window parent, Player player)
+        public PlayerEditor(Window parent, Player player) : base(parent, new Builder("PlayerEditor.glade"))
         {
-            _player = player;
-            
-            var builder = new Builder("Dialogs.glade");
-            builder.Autoconnect(this);
-            
-            SavePlayerButton.Clicked += SavePlayerButtonOnClicked;
-            CancelPlayerEditorButton.Clicked += (sender, args) =>
-            {
-                OnDialogClosed?.Invoke(this, new DialogClosedEventArgs(false, null));
-                PlayerEditorDialog.Dispose();
-            };
-
-            PlayerEditorDialog.TransientFor = parent;
-            PlayerEditorDialog.Show();
-
-            ReadFromModel();
-        }
-        
-        // Events
-
-        private void SavePlayerButtonOnClicked(object sender, EventArgs e)
-        {
-            ReadToModel();
-            OnDialogClosed?.Invoke(this, new DialogClosedEventArgs(true, _player));
-            PlayerEditorDialog.Dispose();
-        }
-        
-        // Private Methods
-
-        private void ReadToModel()
-        {
-            _player.Name = PlayerNameEntry.Text;
-            _player.Alias = PlayerAliasEntry.Text;
-            _player.HexId = PlayerHexIdEntry.Text;
-            _player.Anonymous = PlayerAnonymousCheckButton.Active;
+            EditObject = player;
         }
 
-        private void ReadFromModel()
+        protected override void LoadToModel()
         {
-            PlayerNameEntry.Text = _player.Name;
-            PlayerAliasEntry.Text = _player.Alias;
-            PlayerHexIdEntry.Text = _player.HexId;
-            PlayerAnonymousCheckButton.Active = _player.Anonymous;
+            EditObject.Name = _nameEntry.Text;
+            EditObject.Alias = _aliasEntry.Text;
+            EditObject.HexId = _hexIdEntry.Text;
+            EditObject.Anonymous = _anonCheckButton.Active;
+        }
+
+        protected override void LoadFromModel()
+        {
+            _nameEntry.Text = EditObject.Name;
+            _aliasEntry.Text = EditObject.Alias;
+            _hexIdEntry.Text = EditObject.HexId;
+            _anonCheckButton.Active = EditObject.Anonymous;
         }
     }
 }

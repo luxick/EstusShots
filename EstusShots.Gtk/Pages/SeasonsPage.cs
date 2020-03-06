@@ -43,7 +43,7 @@ namespace EstusShots.Gtk
         private void NewSeasonButtonOnClicked(object sender, EventArgs e)
         {
             var dialog = new SeasonEditor(this, new Season());
-            dialog.OnDialogClosed += SeasonEditorClosed;
+            dialog.DialogClosed += SeasonEditorClosed;
             dialog.Show();
         }
 
@@ -80,7 +80,7 @@ namespace EstusShots.Gtk
         private void SeasonsControlItemActivated(Season item)
         {
             var dialog = new SeasonEditor(this, item);
-            dialog.OnDialogClosed += SeasonEditorClosed;
+            dialog.DialogClosed += SeasonEditorClosed;
             dialog.Show();
         }
 

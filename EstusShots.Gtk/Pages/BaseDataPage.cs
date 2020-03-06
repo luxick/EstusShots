@@ -44,6 +44,12 @@ namespace EstusShots.Gtk
                 new DataColumnDouble(nameof(Drink.Vol)) {Title = "%"}
             };
             _drinksControl = new BindableListControl<Drink>(drinkColumns, nameof(Drink.DrinkId), DrinksTreeView);
+            _drinksControl.ItemActivated += item =>
+            {
+                var drinkEditor = new DrinkEditor(this, item);
+                drinkEditor.DialogClosed += DrinkEditorClosed;
+                drinkEditor.Show();
+            };
 
             // TODO Only Load when navigated to
             Task _;
@@ -51,32 +57,36 @@ namespace EstusShots.Gtk
             _ = ReloadDrinks();
         }
 
+
+
         // Events 
 
         private void PlayersControlActivated(Player player)
         {
             var dialog = new PlayerEditor(this, player);
-            dialog.OnDialogClosed += PlayerEditorClosed;
+            dialog.DialogClosed += PlayerEditorClosed;
+            dialog.Show();
         }
 
         private void NewPlayerButtonOnClicked(object sender, EventArgs e)
         {
             var dialog = new PlayerEditor(this, new Player());
-            dialog.OnDialogClosed += PlayerEditorClosed;
+            dialog.DialogClosed += PlayerEditorClosed;
+            dialog.Show();
         }
 
         private void NewDrinkButtonOnClicked(object sender, EventArgs e)
         {
             var dialog = new DrinkEditor(this, new Drink());
-            dialog.OnDialogClosed += DialogOnOnDialogClosed;
+            dialog.DialogClosed += DrinkEditorClosed;
+            dialog.Show();
         }
 
-        private async void DialogOnOnDialogClosed(object o, DialogClosedEventArgs args)
+        private async void DrinkEditorClosed(object o, DialogClosedEventArgs<Drink> args)
         {
-            if (!args.Ok || !(args.Model is Drink drink)) return;
-
+            if (!args.Ok) return;
             var res = await Task.Factory.StartNew(()
-                => Client.Drinks.SaveDrink(new SaveDrinkParameter(drink)).Result);
+                => Client.Drinks.SaveDrink(new SaveDrinkParameter(args.Model)).Result);
 
             if (!res.OperationResult.Success)
             {
@@ -88,11 +98,11 @@ namespace EstusShots.Gtk
             await ReloadDrinks();
         }
 
-        private async void PlayerEditorClosed(object o, DialogClosedEventArgs args)
+        private async void PlayerEditorClosed(object o, DialogClosedEventArgs<Player> args)
         {
-            if (!args.Ok || !(args.Model is Player player)) return;
+            if (!args.Ok) return;
             var res = await Task.Factory.StartNew(()
-                => Client.Players.SavePlayer(new SavePlayerParameter(player)).Result);
+                => Client.Players.SavePlayer(new SavePlayerParameter(args.Model)).Result);
             if (!res.OperationResult.Success)
             {
                 Info($"Unable to save: {res.OperationResult.ShortMessage}");
