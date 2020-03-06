@@ -7,39 +7,22 @@ using DateTime = GLib.DateTime;
 
 namespace EstusShots.Gtk.Controls
 {
-    public class SelectionChangedEventArgs : EventArgs
+    public class SelectionChangedEventArgs<T> : EventArgs
     {
-        public SelectionChangedEventArgs(object selection)
+        public SelectionChangedEventArgs(T selection)
         {
             Selection = selection;
         }
 
-        public object Selection { get; }
+        public T Selection { get; }
     }
 
-    public delegate void SelectionChangedEventHandler(object o, SelectionChangedEventArgs args);
+    public delegate void SelectionChangedEventHandler<T>(object o, SelectionChangedEventArgs<T> args);
+
+    public delegate void ItemActivatedEventHandler<T>(T item);
 
     public class BindableListControl<T>
     {
-        /// <summary>
-        ///     Initialize a new BindableListView with an existing TreeView Widget
-        /// </summary>
-        /// <param name="columns">The columns of the grid</param>
-        /// <param name="keyField">Unique key field in the item sources type</param>
-        /// <param name="treeView">An instance of an existing TreeView Widget</param>
-        public BindableListControl(List<DataColumn> columns, string keyField, TreeView treeView = null)
-        {
-            TreeView = treeView ?? new TreeView();
-            Columns = columns;
-            KeyField = keyField;
-            InitTreeViewColumns();
-            InitListStore();
-            TreeView.Model = ListStore;
-            Items = new List<T>();
-
-            TreeView.RowActivated += TreeViewOnRowActivated;
-        }
-
         /// <summary> The GTK ListStore that is managed by this <see cref="BindableListControl{T}" />. </summary>
         public ListStore ListStore { get; internal set; }
 
@@ -61,7 +44,32 @@ namespace EstusShots.Gtk.Controls
         /// <summary>
         ///     Event will be invoked when the selected item in the <see cref="TreeView" /> has changed.
         /// </summary>
-        public event SelectionChangedEventHandler OnSelectionChanged;
+        public event SelectionChangedEventHandler<T> SelectionChanged;
+
+        /// <summary>
+        /// Will be invoked when a row in the view has ben acitvated (e.g. double clicked)
+        /// </summary>
+        public event ItemActivatedEventHandler<T> ItemActivated;
+
+        /// <summary>
+        ///     Initialize a new BindableListView with an existing TreeView Widget
+        /// </summary>
+        /// <param name="columns">The columns of the grid</param>
+        /// <param name="keyField">Unique key field in the item sources type</param>
+        /// <param name="treeView">An instance of an existing TreeView Widget</param>
+        public BindableListControl(List<DataColumn> columns, string keyField, TreeView treeView = null)
+        {
+            TreeView = treeView ?? new TreeView();
+            Columns = columns;
+            KeyField = keyField;
+            InitTreeViewColumns();
+            InitListStore();
+            TreeView.Model = ListStore;
+            Items = new List<T>();
+
+            TreeView.RowActivated += TreeViewOnRowActivated;
+            TreeView.Selection.Changed += TreeViewSelectionOnChanged;
+        }
 
         /// <summary>
         ///     Set elements from the <see cref="Items" /> property in the <see cref="ListStore" />.
@@ -99,8 +107,8 @@ namespace EstusShots.Gtk.Controls
                 Console.WriteLine(e);
             }
         }
-        
-        private void TreeViewOnRowActivated(object o, RowActivatedArgs args) 
+
+        private void TreeViewOnRowActivated(object o, RowActivatedArgs args)
         {
             if (!(o is TreeView tree)) return;
             var selection = tree.Selection;
@@ -120,7 +128,29 @@ namespace EstusShots.Gtk.Controls
             }
 
             SelectedItem = item;
-            OnSelectionChanged?.Invoke(this, new SelectionChangedEventArgs(SelectedItem));
+            ItemActivated?.Invoke(SelectedItem);
+        }
+        
+        private void TreeViewSelectionOnChanged(object sender, EventArgs e)
+        {
+            if (!(sender is TreeSelection selection)) return;
+            selection.GetSelected(out var model, out var iter);
+            var key = model.GetValue(iter, 0);
+            var item = Items.FirstOrDefault(x =>
+            {
+                var prop = x.GetType().GetProperty(KeyField);
+                var value = prop?.GetValue(x);
+                return value != null && value.Equals(key);
+            });
+
+            if (item == null)
+            {
+                Console.WriteLine($"No item for key '{key}' found in data store");
+                return;
+            }
+
+            SelectedItem = item;
+            SelectionChanged?.Invoke(selection, new SelectionChangedEventArgs<T>(SelectedItem));
         }
 
         private void InitTreeViewColumns()
@@ -130,10 +160,11 @@ namespace EstusShots.Gtk.Controls
                 // Offset by one, because the first column in the data store is fixed to the key value of the row
                 var valueIndex = Columns.IndexOf(dataColumn) + 1;
                 dataColumn.AddAttribute(dataColumn.Cell, dataColumn.ValueAttribute, valueIndex);
+                dataColumn.SortColumnId = valueIndex;
                 TreeView.AppendColumn(dataColumn);
             }
         }
-        
+
         private void InitListStore()
         {
             var types = Columns

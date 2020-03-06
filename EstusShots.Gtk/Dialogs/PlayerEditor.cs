@@ -5,19 +5,6 @@ using UI = Gtk.Builder.ObjectAttribute;
 
 namespace EstusShots.Gtk.Dialogs
 {
-    public class DialogClosedEventArgs : EventArgs
-    {
-        public bool Ok { get; }
-        public object Model { get; }
-        
-        public DialogClosedEventArgs(bool ok, object model)
-        {
-            Ok = ok;
-            Model = model;
-        }
-    }
-    public delegate void DialogClosedEventHandler(object o, DialogClosedEventArgs args);
-    
     public class PlayerEditor
     {
         private readonly Player _player;

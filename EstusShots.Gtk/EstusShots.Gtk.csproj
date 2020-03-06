@@ -25,4 +25,8 @@
       <ProjectReference Include="..\EstusShots.Shared\EstusShots.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Dialogs\Glade" />
+    </ItemGroup>
+
 </Project>

@@ -46,18 +46,23 @@ namespace EstusShots.Server.Services
 
         public async Task<ApiResponse<SaveSeasonResponse>> SaveSeason(SaveSeasonParameter parameter)
         {
-            var season = _mapper.Map<Season>(parameter.Season);
-            var existing = await _context.Seasons.FindAsync(season.SeasonId);
-            if (existing == null)
+            if (parameter.Season.SeasonId.IsEmpty())
             {
-                _context.Seasons.Add(season);await _context.SaveChangesAsync();
-                _logger.LogInformation($"New season created: '{season.SeasonId}'");
+                var season = _mapper.Map<Season>(parameter.Season);
+                _context.Seasons.Add(season);
+                var count = await _context.SaveChangesAsync();
+                _logger.LogInformation($"Season created: '{season.SeasonId}' ({count} rows updated)");
+                return new ApiResponse<SaveSeasonResponse>(new SaveSeasonResponse(season.SeasonId));
             }
             else
             {
-                throw new NotImplementedException();
+                var season = await _context.Seasons.FindAsync(parameter.Season.SeasonId);
+                _context.Seasons.Update(season);
+                _mapper.Map(parameter.Season, season);
+                var count = await _context.SaveChangesAsync();
+                _logger.LogInformation($"Season '{season.SeasonId}' updated ({count} rows updated)");
+                return new ApiResponse<SaveSeasonResponse>(new SaveSeasonResponse(season.SeasonId));
             }
-            return new ApiResponse<SaveSeasonResponse>(new SaveSeasonResponse(season.SeasonId));
         }
     }
 }

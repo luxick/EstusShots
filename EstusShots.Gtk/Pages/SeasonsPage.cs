@@ -40,18 +40,20 @@ namespace EstusShots.Gtk
             await ReloadSeasons();
         }
 
-        private async void NewSeasonButtonOnClicked(object sender, EventArgs e)
+        private void NewSeasonButtonOnClicked(object sender, EventArgs e)
         {
+            var dialog = new SeasonEditor(this, new Season());
+            dialog.OnDialogClosed += SeasonEditorClosed;
+            dialog.Show();
+        }
+
+        private async void SeasonEditorClosed(object o, DialogClosedEventArgs<Season> args)
+        {
+            if (!args.Ok) return;
+            
             using var _ = new LoadingMode(this);
-            // TODO real season edit control
-            var season = new Season
-            {
-                Game = "Test Game",
-                Number = SeasonsControl.Items.Any() ? SeasonsControl.Items.Max(x => x.Number) + 1 : 1,
-                Start = DateTime.Now,
-                Description = "This is a demo description!"
-            };
-            var parameter = new SaveSeasonParameter(season);
+            
+            var parameter = new SaveSeasonParameter(args.Model);
             var res = await Client.Seasons.SaveSeason(parameter);
             if (!res.OperationResult.Success)
             {
@@ -61,24 +63,25 @@ namespace EstusShots.Gtk
             }
 
             await ReloadSeasons();
-            Info("Created new Season");
+            Info($"Season {args.Model.DisplayName}");
         }
 
-        private async void SeasonsControlOnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void SeasonsControlSelectionChanged(object sender, SelectionChangedEventArgs<Season> e)
         {
-            if (!(e.Selection is Season season)) return;
-            using var _ = new LoadingMode(this);
-
             EpisodesPage.Show();
-            var parameter = new GetEpisodesParameter(season.SeasonId);
+            var parameter = new GetEpisodesParameter(e.Selection.SeasonId);
             var res = await Client.Episodes.GetEpisodes(parameter);
             EpisodesControl.Items = res.Data.Episodes;
             EpisodesControl.DataBind();
-
             UpdateTitle();
-            Navigation.Page = EpisodesPageNumber;
-
-            Info($"{season.DisplayName}: {res.Data.Episodes.Count} episodes");
+            Info($"{e.Selection.DisplayName}: {res.Data.Episodes.Count} episodes");
+        }
+        
+        private void SeasonsControlItemActivated(Season item)
+        {
+            var dialog = new SeasonEditor(this, item);
+            dialog.OnDialogClosed += SeasonEditorClosed;
+            dialog.Show();
         }
 
         // Private Methods
@@ -93,8 +96,9 @@ namespace EstusShots.Gtk
                 ErrorDialog.Show(res.OperationResult);
                 return;
             }
-
-            SeasonsControl.Items = res.Data.Seasons;
+            
+            // TODO Initial ordering should be done by the control
+            SeasonsControl.Items = res.Data.Seasons.OrderBy(x => x.DisplayName).ToList();
             SeasonsControl.DataBind();
             Info("Seasons Refreshed");
         }
@@ -103,7 +107,7 @@ namespace EstusShots.Gtk
         {
             var columns = new List<DataColumn>
             {
-                new DataColumnText(nameof(Season.DisplayName)) {Title = "Name"},
+                new DataColumnText(nameof(Season.DisplayName)) {Title = "Name", SortOrder = SortType.Ascending},
                 new DataColumnText(nameof(Season.Description)),
                 new DataColumnText(nameof(Season.Start))
                 {
@@ -115,7 +119,8 @@ namespace EstusShots.Gtk
                 }
             };
             SeasonsControl = new BindableListControl<Season>(columns, nameof(Season.SeasonId), SeasonsView);
-            SeasonsControl.OnSelectionChanged += SeasonsControlOnSelectionChanged;
+            SeasonsControl.SelectionChanged += SeasonsControlSelectionChanged;
+            SeasonsControl.ItemActivated += SeasonsControlItemActivated;
         }
     }
 }

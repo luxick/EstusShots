@@ -60,7 +60,7 @@ namespace EstusShots.Server.Services
                 _context.Players.Update(player);
                 _mapper.Map(parameter.Player, player);
                 var count = await _context.SaveChangesAsync();
-                _logger.LogInformation($"Updated player '{player.PlayerId}'");
+                _logger.LogInformation($"Updated player '{player.PlayerId}' ({count} rows)");
                 return new ApiResponse<SavePlayerResponse>(new SavePlayerResponse(player.PlayerId));
             }
         }

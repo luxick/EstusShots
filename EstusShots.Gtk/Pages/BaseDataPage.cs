@@ -35,7 +35,7 @@ namespace EstusShots.Gtk
                 new DataColumnText(nameof(Player.HexId)) {Title = "Hex ID"},
             };
             _playersControl = new BindableListControl<Player>(playerColumns, nameof(Player.PlayerId), PlayersTreeView);
-            _playersControl.OnSelectionChanged += PlayersControlOnOnSelectionChanged;
+            _playersControl.ItemActivated += PlayersControlActivated;
 
 
             var drinkColumns = new List<DataColumn>
@@ -53,9 +53,8 @@ namespace EstusShots.Gtk
 
         // Events 
 
-        private void PlayersControlOnOnSelectionChanged(object o, SelectionChangedEventArgs args)
+        private void PlayersControlActivated(Player player)
         {
-            if (!(args.Selection is Player player)) return;
             var dialog = new PlayerEditor(this, player);
             dialog.OnDialogClosed += PlayerEditorClosed;
         }
