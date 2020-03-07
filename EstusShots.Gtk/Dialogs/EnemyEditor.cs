@@ -10,39 +10,33 @@ namespace EstusShots.Gtk.Dialogs
     {
         [UI] private readonly Entry _nameEntry = null;
         [UI] private readonly CheckButton _isBossCheckButton = null;
-        [UI] private readonly SearchEntry _searchSeasonEntry = null;
-        [UI] private readonly TreeView _selectedSeasonsTreeView = null;
+        [UI] private readonly Box _seasonSelectionContainer = null;
 
-        private BindableListControl<Season> _selectedSeasonsControl;
-        private readonly List<Season> _allSeasons;
-        private readonly EntryCompletion _allSeasonsCompletion;
+        private LookupSelectionControl<Season> _seasonSelectionControl;
 
         public EnemyEditor(Window parent, Enemy enemy, List<Season> seasons) :
             base(parent, new Builder("EnemyEditor.glade"))
         {
             EditObject = enemy;
-            _allSeasons = seasons;
-
-            var columns = new List<DataColumn>
+            _seasonSelectionControl = new LookupSelectionControl<Season>(new LookupSelectionControlOptions<Season>
             {
-                new DataColumnText(nameof(Season.DisplayName)) {Title = "Seasons"}
-            };
-            _selectedSeasonsControl =
-                new BindableListControl<Season>(columns, nameof(Season.SeasonId), _selectedSeasonsTreeView);
-            
-            _allSeasonsCompletion = new EntryCompletion();
-            
-            _searchSeasonEntry.Completion = new EntryCompletion();
+                KeyProperty = nameof(Season.SeasonId),
+                DisplayProperty = nameof(Season.DisplayName),
+                Columns = new List<DataColumn>
+                {
+                    new DataColumnText(nameof(Season.DisplayName)) {Title = "Seasons"}
+                },
+                SearchSpace = seasons
+            });
+            _seasonSelectionContainer.PackStart(_seasonSelectionControl, true, true, 5);
         }
 
         protected override void LoadToModel()
         {
-            throw new System.NotImplementedException();
         }
 
         protected override void LoadFromModel()
         {
-            throw new System.NotImplementedException();
         }
     }
 }

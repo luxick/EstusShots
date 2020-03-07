@@ -33,7 +33,8 @@ namespace EstusShots.Gtk
 
         private void NewEnemyButtonOnClicked(object sender, EventArgs e)
         {
-            
+            var enemyEditor = new EnemyEditor(this, new Enemy(), SeasonsControl.Items);
+            enemyEditor.Show();
         }
 
         private async void ReloadEnemies()

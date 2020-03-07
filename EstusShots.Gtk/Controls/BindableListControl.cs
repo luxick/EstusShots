@@ -21,6 +21,8 @@ namespace EstusShots.Gtk.Controls
 
     public delegate void ItemActivatedEventHandler<T>(T item);
 
+    public delegate void RowContextMenuHandler<T>(T selection);
+
     public class BindableListControl<T>
     {
         /// <summary> The GTK ListStore that is managed by this <see cref="BindableListControl{T}" />. </summary>
@@ -50,6 +52,11 @@ namespace EstusShots.Gtk.Controls
         /// Will be invoked when a row in the view has ben acitvated (e.g. double clicked)
         /// </summary>
         public event ItemActivatedEventHandler<T> ItemActivated;
+        
+        /// <summary>
+        /// Will be invoked when a row is right clicked
+        /// </summary>
+        public event RowContextMenuHandler<T> RowContextMenuOpened;
 
         /// <summary>
         ///     Initialize a new BindableListView with an existing TreeView Widget
@@ -68,9 +75,10 @@ namespace EstusShots.Gtk.Controls
             Items = new List<T>();
 
             TreeView.RowActivated += TreeViewOnRowActivated;
+            TreeView.ButtonReleaseEvent += TreeViewOnButtonReleaseEvent;
             TreeView.Selection.Changed += TreeViewSelectionOnChanged;
         }
-
+        
         /// <summary>
         ///     Set elements from the <see cref="Items" /> property in the <see cref="ListStore" />.
         /// </summary>
@@ -152,6 +160,12 @@ namespace EstusShots.Gtk.Controls
             SelectedItem = item;
             SelectionChanged?.Invoke(selection, new SelectionChangedEventArgs<T>(SelectedItem));
         }
+        
+        private void TreeViewOnButtonReleaseEvent(object o, ButtonReleaseEventArgs args)
+        {
+            if (args.Event.Button != 3) return;
+            RowContextMenuOpened?.Invoke(SelectedItem);
+        }
 
         private void InitTreeViewColumns()
         {
@@ -175,7 +189,6 @@ namespace EstusShots.Gtk.Controls
                     if (gType.ToString() == "GtkSharpValue") gType = MapType(propType);
                     return gType;
                 });
-            var data = new DateTime();
             // The first column in the data store is always the key field.
             var columns = new List<GType> {(GType) typeof(T).GetProperty(KeyField)?.PropertyType};
             columns.AddRange(types);

@@ -2,7 +2,6 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkEntryCompletion" id="entrycompletion1"/>
   <object class="GtkDialog" id="_editorDialog">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Enemy</property>
@@ -10,7 +9,7 @@
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_width">350</property>
-    <property name="default_height">250</property>
+    <property name="default_height">300</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
@@ -119,44 +118,18 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSearchEntry" id="_searchSeasonEntry">
+              <object class="GtkBox" id="_seasonSelectionContainer">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="primary_icon_name">edit-find-symbolic</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="primary_icon_sensitive">False</property>
-                <property name="completion">entrycompletion1</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="top_attach">2</property>
               </packing>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
-                <property name="shadow_type">in</property>
-                <child>
-                  <object class="GtkTreeView" id="_selectedSeasonsTreeView">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="enable_grid_lines">horizontal</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection"/>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <placeholder/>
             </child>
             <child>
               <placeholder/>
