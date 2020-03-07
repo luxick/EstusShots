@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace EstusShots.Shared.Dto
 {
@@ -15,6 +15,6 @@ namespace EstusShots.Shared.Dto
 
         public Guid? SeasonId { get; set; }
 
-        public Season Season { get; set; }
+        public List<Season> Seasons { get; set; }
     }
 }

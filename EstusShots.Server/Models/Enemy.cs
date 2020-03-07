@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EstusShots.Server.Models
@@ -13,8 +14,6 @@ namespace EstusShots.Server.Models
 
         public bool Defeated { get; set; }
 
-        public Guid? SeasonId { get; set; }
-
-        public Season? Season { get; set; }
+        public ICollection<SeasonEnemies> SeasonEnemies { get; set; } = default!;
     }
 }
