@@ -16,7 +16,6 @@ namespace EstusShots.Gtk
         [UI] public readonly TreeView PlayersTreeView = null;
         [UI] public readonly Button NewPlayerButton = null;
         [UI] public readonly Button NewDrinkButton = null;
-
         [UI] public readonly TreeView DrinksTreeView = null;
 
         private BindableListControl<Player> _playersControl;

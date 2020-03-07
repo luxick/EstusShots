@@ -42,6 +42,7 @@ namespace EstusShots.Gtk
             InitSeasonsPage();
             InitEpisodesPage();
             InitBaseDataPage();
+            InitEnemiesPage();
 
             // The episodes page is not shown, as long as no season is selected 
             EpisodesPage.Hide();
