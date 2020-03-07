@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EstusShots.Server.Models
 {
@@ -6,7 +7,7 @@ namespace EstusShots.Server.Models
     {
         public Guid DrinkId { get; set; }
 
-        public string Name { get; set; } = default!;
+        [MaxLength(50)] public string Name { get; set; } = default!;
 
         public double Vol { get; set; }
     }

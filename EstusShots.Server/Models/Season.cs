@@ -19,5 +19,7 @@ namespace EstusShots.Server.Models
         public DateTime? End { get; set; }
 
         public List<Episode> Episodes { get; set; } = default!;
+
+        public List<Enemy> Enemies { get; set; } = default!;
     }
 }
