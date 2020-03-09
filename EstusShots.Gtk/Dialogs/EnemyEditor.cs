@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EstusShots.Gtk.Controls;
 using EstusShots.Shared.Dto;
 using Gtk;
@@ -33,10 +34,20 @@ namespace EstusShots.Gtk.Dialogs
 
         protected override void LoadToModel()
         {
+            EditObject.Name = _nameEntry.Text;
+            EditObject.Boss = _isBossCheckButton.Active;
+            EditObject.Seasons = _seasonSelectionControl.SelectedItems.Select(s => new Season()
+            {
+                SeasonId = s.SeasonId
+            }).ToList();
         }
 
         protected override void LoadFromModel()
         {
+            _nameEntry.Text = EditObject.Name;
+            _isBossCheckButton.Active = EditObject.Boss;
+            if (EditObject.Seasons != null)
+                _seasonSelectionControl.SelectedItems.AddRange(EditObject.Seasons);
         }
     }
 }

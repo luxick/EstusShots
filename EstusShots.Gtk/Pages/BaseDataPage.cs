@@ -56,8 +56,6 @@ namespace EstusShots.Gtk
             _ = ReloadDrinks();
         }
 
-
-
         // Events 
 
         private void PlayersControlActivated(Player player)

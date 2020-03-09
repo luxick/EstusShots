@@ -31,13 +31,33 @@ namespace EstusShots.Gtk
             _newEnemyButton.Clicked += NewEnemyButtonOnClicked;
         }
 
+        private void EnemiesPageNavigatedTo()
+        {
+            var _ = ReloadEnemies();
+        }
+
         private void NewEnemyButtonOnClicked(object sender, EventArgs e)
         {
             var enemyEditor = new EnemyEditor(this, new Enemy(), SeasonsControl.Items);
+            enemyEditor.DialogClosed += EnemyEditorOnDialogClosed;
             enemyEditor.Show();
         }
 
-        private async void ReloadEnemies()
+        private async void EnemyEditorOnDialogClosed(object o, DialogClosedEventArgs<Enemy> args)
+        {
+            if (!args.Ok) return;
+            var res = await Client.Enemies.SaveEnemy(new SaveEnemyParameter(args.Model));
+            if (!res.OperationResult.Success)
+            {
+                Info($"Unable to save: {res.OperationResult.ShortMessage}");
+                ErrorDialog.Show(res.OperationResult);
+                return;
+            }
+            
+            await ReloadEnemies();
+        }
+
+        private async Task ReloadEnemies()
         {
             var res = await Task.Factory.StartNew(()
                 => Client.Enemies.GetEnemies(new GetEnemiesParameter()).Result);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using EstusShots.Client;
 using EstusShots.Gtk.Dialogs;
 using Gdk;
@@ -56,7 +57,7 @@ namespace EstusShots.Gtk
         private void NavigationOnSwitchPage(object o, SwitchPageArgs args)
         {
             if (!(args.Page is Box appPage)) return;
-            
+            if (appPage == _enemiesPage) EnemiesPageNavigatedTo();
         }
 
         private void ExceptionManagerOnUnhandledException(UnhandledExceptionArgs args)
