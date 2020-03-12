@@ -32,7 +32,10 @@ namespace EstusShots.Server
                     opt.UseSqlite(Configuration.GetConnectionString("Sqlite"));
                 });
             services.AddAutoMapper(typeof(Startup));
-            services.AddControllers(options => { options.Filters.Add(typeof(DebugDelayFilter)); })
+            services.AddControllers(options =>
+                {
+                    // options.Filters.Add(typeof(DebugDelayFilter));
+                })
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
