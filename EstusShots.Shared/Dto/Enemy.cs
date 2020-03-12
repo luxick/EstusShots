@@ -13,8 +13,6 @@ namespace EstusShots.Shared.Dto
 
         public bool Defeated { get; set; }
 
-        public Guid? SeasonId { get; set; }
-
         public List<Season> Seasons { get; set; }
     }
 }

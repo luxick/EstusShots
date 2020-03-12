@@ -2,7 +2,7 @@ using System;
 
 namespace EstusShots.Server.Models
 {
-    public class SeasonEnemies
+    public class SeasonEnemy
     {
         public Guid SeasonId { get; set; } = default!;
         public Season Season { get; set; } = default!;

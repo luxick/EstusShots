@@ -2,7 +2,7 @@ using System;
 
 namespace EstusShots.Server.Models
 {
-    public class EpisodePlayers
+    public class EpisodePlayer
     {
         public Guid EpisodeId { get; set; } = default!;
         public Episode Episode { get; set; } = default!;

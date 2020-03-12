@@ -30,12 +30,15 @@ namespace EstusShots.Server.Services
             List<Enemy> enemies;
             if (parameter.SeasonId.IsEmpty())
             {
-                enemies = await _context.Enemies.ToListAsync();
+                enemies = await _context.Enemies
+                    .Include("SeasonEnemies.Season")
+                    .ToListAsync();
                 _logger.LogInformation($"Found {enemies.Count} enemies in database");
             }
             else
             {
                 enemies = await _context.Enemies
+                    .Include("SeasonEnemies.Season")
                     .Where(e => e.SeasonEnemies.Any(x => x.SeasonId == parameter.SeasonId))
                     .ToListAsync();
                 _logger.LogInformation($"Found {enemies.Count} enemies for season '{parameter.SeasonId}'");
@@ -59,29 +62,9 @@ namespace EstusShots.Server.Services
 
         public async Task<ApiResponse<SaveEnemyResponse>> SaveEnemy(SaveEnemyParameter parameter)
         {
-            if (parameter.Enemy.EnemyId.IsEmpty())
-            {
-                var enemy = _mapper.Map<Enemy>(parameter.Enemy);
-                _context.Enemies.Add(enemy);
-                var count = await _context.SaveChangesAsync();
-                _logger.LogInformation($"Created enemy '{enemy.EnemyId}' ({count} rows)");
-                return new ApiResponse<SaveEnemyResponse>(new SaveEnemyResponse(enemy.EnemyId));
-            }
-            else
-            {
-                var enemy = await _context.Enemies.FindAsync(parameter.Enemy.EnemyId);
-                if (enemy == null)
-                {
-                    _logger.LogError($"Enemy '{parameter.Enemy.EnemyId}' not found in database");
-                    return new ApiResponse<SaveEnemyResponse>(new OperationResult(false, "Object not found"));
-                }
-
-                _context.Enemies.Update(enemy);
-                _mapper.Map(parameter.Enemy, enemy);
-                var count = await _context.SaveChangesAsync();
-                _logger.LogInformation($"Updated enemy '{enemy.EnemyId}' ({count} rows)");
-                return new ApiResponse<SaveEnemyResponse>(new SaveEnemyResponse(enemy.EnemyId));
-            }
+            if (parameter.Enemy.EnemyId.IsEmpty()) 
+                return await CreateEnemy(parameter);
+            return await UpdateEnemy(parameter);
         }
 
         public async Task<ApiResponse<DeleteEnemyResponse>> DeleteEnemy(DeleteEnemyParameter parameter)
@@ -97,6 +80,49 @@ namespace EstusShots.Server.Services
             var count = _context.SaveChangesAsync();
             _logger.LogInformation($"Deleted enemy '{parameter.EnemyId}' ({count} rows)");
             return new ApiResponse<DeleteEnemyResponse>(new DeleteEnemyResponse());
+        }
+        
+        // Private Methods
+
+        private async Task<ApiResponse<SaveEnemyResponse>> CreateEnemy(SaveEnemyParameter parameter)
+        {
+            var enemy = _mapper.Map<Enemy>(parameter.Enemy);
+            _context.Enemies.Add(enemy);
+            var count = await _context.SaveChangesAsync();
+            _logger.LogInformation($"Created enemy '{enemy.EnemyId}' ({count} rows)");
+
+            // Relation mapping
+            enemy.SeasonEnemies = new List<SeasonEnemy>();
+            foreach (var season in parameter.Enemy.Seasons)
+            {
+                var relation = new SeasonEnemy
+                {
+                    SeasonId = season.SeasonId,
+                    EnemyId = enemy.EnemyId
+                };
+                enemy.SeasonEnemies.Add(relation);
+            }
+            
+            count = await _context.SaveChangesAsync();
+            _logger.LogInformation($"Added enemy '{enemy.EnemyId}' to {parameter.Enemy.Seasons.Count} seasons ({count} rows)");
+
+            return new ApiResponse<SaveEnemyResponse>(new SaveEnemyResponse(enemy.EnemyId));
+        }
+        
+        private async Task<ApiResponse<SaveEnemyResponse>> UpdateEnemy(SaveEnemyParameter parameter)
+        {
+            var enemy = await _context.Enemies.FindAsync(parameter.Enemy.EnemyId);
+            if (enemy == null)
+            {
+                _logger.LogError($"Enemy '{parameter.Enemy.EnemyId}' not found in database");
+                return new ApiResponse<SaveEnemyResponse>(new OperationResult(false, "Object not found"));
+            }
+
+            _context.Enemies.Update(enemy);
+            _mapper.Map(parameter.Enemy, enemy);
+            var count = await _context.SaveChangesAsync();
+            _logger.LogInformation($"Updated enemy '{enemy.EnemyId}' ({count} rows)");
+            return new ApiResponse<SaveEnemyResponse>(new SaveEnemyResponse(enemy.EnemyId));
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using EstusShots.Server.Models;
 
@@ -19,7 +20,8 @@ namespace EstusShots.Server.Mapping
             CreateMap<Drink, Shared.Dto.Drink>();
             CreateMap<Shared.Dto.Drink, Drink>();
             
-            CreateMap<Enemy, Shared.Dto.Enemy>();
+            CreateMap<Enemy, Shared.Dto.Enemy>()
+                .ForMember(x => x.Seasons, y => y.MapFrom(z => z.SeasonEnemies.Select(a => a.Season)));
             CreateMap<Shared.Dto.Enemy, Enemy>();
         }
     }

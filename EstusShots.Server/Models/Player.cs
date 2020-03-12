@@ -18,6 +18,6 @@ namespace EstusShots.Server.Models
 
         public string DisplayName => Anonymous ? Alias : Name;
 
-        public ICollection<EpisodePlayers> EpisodePlayers { get; set; } = default!;
+        public ICollection<EpisodePlayer> EpisodePlayers { get; set; } = default!;
     }
 }

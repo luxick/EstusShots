@@ -23,6 +23,6 @@ namespace EstusShots.Server.Models
 
         public Season Season { get; set; } = default!;
 
-        public ICollection<EpisodePlayers> EpisodePlayers { get; set; } = default!;
+        public ICollection<EpisodePlayer> EpisodePlayers { get; set; } = default!;
     }
 }

@@ -20,6 +20,6 @@ namespace EstusShots.Server.Models
 
         public List<Episode> Episodes { get; set; } = default!;
 
-        public ICollection<SeasonEnemies> SeasonEnemies { get; set; } = default!;
+        public ICollection<SeasonEnemy> SeasonEnemies { get; set; } = default!;
     }
 }

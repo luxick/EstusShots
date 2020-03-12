@@ -14,6 +14,6 @@ namespace EstusShots.Server.Models
 
         public bool Defeated { get; set; }
 
-        public ICollection<SeasonEnemies> SeasonEnemies { get; set; } = default!;
+        public ICollection<SeasonEnemy> SeasonEnemies { get; set; } = default!;
     }
 }
