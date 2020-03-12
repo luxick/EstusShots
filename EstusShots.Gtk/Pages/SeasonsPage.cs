@@ -116,7 +116,8 @@ namespace EstusShots.Gtk
                 new DataColumnText(nameof(Season.End))
                 {
                     DisplayConverter = date => (date as DateTime?)?.ToString("dd.MM.yyyy") ?? "Ongoing"
-                }
+                },
+                new DataColumnText(nameof(Season.EpisodeCount)) {Title = "Episode Count"}
             };
             SeasonsControl = new BindableListControl<Season>(columns, nameof(Season.SeasonId), SeasonsView);
             SeasonsControl.SelectionChanged += SeasonsControlSelectionChanged;

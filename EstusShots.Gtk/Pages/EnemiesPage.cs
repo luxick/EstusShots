@@ -29,7 +29,7 @@ namespace EstusShots.Gtk
                 new DataColumnText(nameof(Enemy.Seasons))
                 {
                     Title = "Game",
-                    DisplayConverter = seasons => string.Join(", ", ((IEnumerable<Season>) seasons).Select(x => x.Game))
+                    DisplayConverter = seasons => ((IEnumerable<Season>) seasons)?.Select(x => x.Game).StringJoin(", ")
                 }
             };
             _enemiesControl = new BindableListControl<Enemy>(columns, nameof(Enemy.EnemyId), _enemiesTreeView);

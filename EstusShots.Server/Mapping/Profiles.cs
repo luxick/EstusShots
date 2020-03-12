@@ -8,7 +8,8 @@ namespace EstusShots.Server.Mapping
     {
         public Profiles()
         {
-            CreateMap<Season, Shared.Dto.Season>();
+            CreateMap<Season, Shared.Dto.Season>()
+                .ForMember(x => x.EpisodeCount, y => y.MapFrom(z => z.Episodes.Count));
             CreateMap<Shared.Dto.Season, Season>();
 
             CreateMap<Episode, Shared.Dto.Episode>();

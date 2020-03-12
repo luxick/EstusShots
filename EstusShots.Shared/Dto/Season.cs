@@ -16,6 +16,8 @@ namespace EstusShots.Shared.Dto
 
         public DateTime? End { get; set; }
 
+        public int EpisodeCount { get; set; }
+
         public string DisplayName => $"S{Number:D2} {Game}";
     }
 }

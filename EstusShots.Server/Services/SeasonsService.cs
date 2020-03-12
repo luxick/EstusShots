@@ -27,7 +27,9 @@ namespace EstusShots.Server.Services
 
         public async Task<ApiResponse<GetSeasonsResponse>> GetSeasons(GetSeasonsParameter parameter)
         {
-            var seasons = await _context.Seasons.ToListAsync();
+            var seasons = await _context.Seasons
+                .Include(season => season.Episodes)
+                .ToListAsync();
             var dtos = _mapper.Map<List<Dto.Season>>(seasons);
             return new ApiResponse<GetSeasonsResponse>(new GetSeasonsResponse(dtos));
         }
