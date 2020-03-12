@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EstusShots.Gtk.Controls;
 using EstusShots.Gtk.Dialogs;
@@ -15,7 +16,7 @@ namespace EstusShots.Gtk
         [UI] private readonly Box _enemiesPage = null;
         [UI] private readonly TreeView _enemiesTreeView = null;
         [UI] private readonly Button _newEnemyButton = null;
-        
+
         private BindableListControl<Enemy> _enemiesControl;
 
         private void InitEnemiesPage()
@@ -23,11 +24,16 @@ namespace EstusShots.Gtk
             var columns = new List<DataColumn>
             {
                 new DataColumnText(nameof(Enemy.Name)),
-                new DataColumnBool(nameof(Enemy.Boss)){Title = "Is Boss?"},
-                new DataColumnBool(nameof(Enemy.Defeated)){Title = "Defeated?"}
+                new DataColumnBool(nameof(Enemy.Boss)) {Title = "Is Boss?"},
+                new DataColumnBool(nameof(Enemy.Defeated)) {Title = "Defeated?"},
+                new DataColumnText(nameof(Enemy.Seasons))
+                {
+                    Title = "Game",
+                    DisplayConverter = seasons => string.Join(", ", ((IEnumerable<Season>) seasons).Select(x => x.Game))
+                }
             };
             _enemiesControl = new BindableListControl<Enemy>(columns, nameof(Enemy.EnemyId), _enemiesTreeView);
-            
+
             _newEnemyButton.Clicked += NewEnemyButtonOnClicked;
         }
 
@@ -53,7 +59,7 @@ namespace EstusShots.Gtk
                 ErrorDialog.Show(res.OperationResult);
                 return;
             }
-            
+
             await ReloadEnemies();
         }
 
