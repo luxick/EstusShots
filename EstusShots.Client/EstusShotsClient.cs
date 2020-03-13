@@ -3,14 +3,12 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using EstusShots.Client.Routes;
-using EstusShots.Shared.Dto;
 using EstusShots.Shared.Interfaces;
 using EstusShots.Shared.Models;
 
 namespace EstusShots.Client
 {
-    public class EstusShotsClient
+    public partial class EstusShotsClient
     {
         private readonly JsonSerializerOptions _serializerOptions = new JsonSerializerOptions
         {
@@ -20,13 +18,6 @@ namespace EstusShots.Client
 
         public string ApiUrl { get; }
         
-        // API Routes
-        public Seasons Seasons { get; }
-        public Episodes Episodes { get; }
-        public Players Players { get; }
-        public Drinks Drinks { get; }
-        public Enemies Enemies { get; }
-
         /// <summary>
         /// Creates a new instance of <see cref="EstusShotsClient"/>
         /// </summary>
@@ -35,12 +26,7 @@ namespace EstusShots.Client
         {
             ApiUrl = apiUrl;
             HttpClient = new HttpClient {Timeout = TimeSpan.FromSeconds(10)};
-            
-            Seasons = new Seasons(this);
-            Episodes = new Episodes(this);
-            Players = new Players(this);
-            Drinks = new Drinks(this);
-            Enemies = new Enemies(this);
+            CreateApiRoutes();
         }
         
         /// <summary>

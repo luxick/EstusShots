@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using EstusShots.Client;
 using EstusShots.Gtk.Dialogs;
 using Gdk;

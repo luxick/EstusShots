@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EstusShots.Server.Models;
 using EstusShots.Shared.Interfaces;
+using EstusShots.Shared.Interfaces.Controllers;
 using EstusShots.Shared.Models;
 using EstusShots.Shared.Models.Parameters;
 using Microsoft.EntityFrameworkCore;

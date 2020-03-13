@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using EstusShots.Shared.Models;
 using EstusShots.Shared.Models.Parameters;
 
-namespace EstusShots.Shared.Interfaces
+namespace EstusShots.Shared.Interfaces.Controllers
 {
     /// <summary>
     /// Load and manipulate player objects
@@ -33,8 +33,8 @@ namespace EstusShots.Shared.Interfaces
         /// <summary>
         /// Deletes a player
         /// </summary>
-        /// <param name="parameter">An <see cref="DeletePlayerParameter"/> instance</param>
-        /// <returns>An ApiResponse instance of type <see cref="DeletePlayerResponse"/></returns>
-        Task<ApiResponse<DeletePlayerResponse>> DeletePlayers(DeletePlayerParameter parameter);
+        /// <param name="parameter">An <see cref="DeletePlayersParameter"/> instance</param>
+        /// <returns>An ApiResponse instance of type <see cref="DeletePlayersResponse"/></returns>
+        Task<ApiResponse<DeletePlayerResponse>> DeletePlayer(DeletePlayerParameter parameter);
     }
 }

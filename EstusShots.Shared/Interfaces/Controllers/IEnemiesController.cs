@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using EstusShots.Shared.Models;
 using EstusShots.Shared.Models.Parameters;
 
-namespace EstusShots.Shared.Interfaces
+namespace EstusShots.Shared.Interfaces.Controllers
 {
     /// <summary>
     /// Load and manipulate Enemy objects

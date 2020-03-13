@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EstusShots.Server.Models;
 using EstusShots.Shared.Interfaces;
+using EstusShots.Shared.Interfaces.Controllers;
 using EstusShots.Shared.Models;
 using EstusShots.Shared.Models.Parameters;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +66,7 @@ namespace EstusShots.Server.Services
             }
         }
 
-        public Task<ApiResponse<DeletePlayerResponse>> DeletePlayers(DeletePlayerParameter parameter)
+        public Task<ApiResponse<DeletePlayerResponse>> DeletePlayer(DeletePlayerParameter parameter)
         {
             throw new System.NotImplementedException();
         }
