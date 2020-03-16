@@ -14,6 +14,10 @@
         <EmbeddedResource Include="Icons\icon.png">
             <LogicalName>%(Filename)%(Extension)</LogicalName>
         </EmbeddedResource>
+
+        <Content Include="Theme\**\*" Condition="$(NETCoreSdkRuntimeIdentifier) == 'win-x64'">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -27,6 +31,7 @@
 
     <ItemGroup>
       <Folder Include="Dialogs\Glade" />
+      <Folder Include="Theme" />
     </ItemGroup>
 
 </Project>
